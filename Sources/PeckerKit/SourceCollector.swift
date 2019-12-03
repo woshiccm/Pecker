@@ -16,7 +16,7 @@ public class SourceCollector {
     /// Populates the internal collections form the path source code
     /// Currently only supports Swift
     func collect() throws {
-        let files: [Path] = try recursiveFiles(withExtensions: ["swift"], at: path)
+        let files: [Path] = recursiveFiles(withExtensions: ["swift"], at: path)
         for file in files {
             let syntax = try SyntaxParser.parse(file.url)
             let sourceLocationConverter = SourceLocationConverter(file: file.description, tree: syntax)
