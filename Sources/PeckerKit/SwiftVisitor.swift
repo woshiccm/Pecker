@@ -69,7 +69,7 @@ public final class SwiftVisitor: SyntaxVisitor {
     
     public func visit(_ node: ExtensionDeclSyntax) -> SyntaxVisitorContinueKind {
         for token in node.extendedType.tokens {
-            if let token = node.extendedType.lastToken, let position = findLocaiton(syntax: token) {
+            if let position = findLocaiton(syntax: token) {
                 sourceExtensions.append(SourceDetail(name: token.description , sourceKind: .extension, location: position))
             }
         }
