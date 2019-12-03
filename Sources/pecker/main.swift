@@ -21,7 +21,7 @@ fileprivate func main(_ arguments: [String]) -> Int32 {
             return 1
         }
     case .version:
-        print("0.0.1")
+        print("0.0.2")
         return 0
     }
 }
