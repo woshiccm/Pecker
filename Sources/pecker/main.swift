@@ -21,7 +21,7 @@ fileprivate func main(_ arguments: [String]) -> Int32 {
             return 1
         }
     case .version:
-        print("0.0.2")
+        print("0.0.3")
         return 0
     }
 }
@@ -29,7 +29,14 @@ fileprivate func main(_ arguments: [String]) -> Int32 {
 private func createConfiguration(options: CommandLineOptions) throws -> Configuration {
     let processInfo = ProcessInfo()
     let targetName = try processInfo.environmentVariable(name: EnvironmentKeys.target)
-    let indexStorePath = try findIndexFile(targetName: targetName)
+    
+    /// Find the index path, default is   ~Library/Developer/Xcode/DerivedData/<target>/Index/DataStore
+    let buildRoot = try processInfo.environmentVariable(name: EnvironmentKeys.buildRoot)
+    guard let buildRootPath = Path(buildRoot),
+        let indexStorePath = Path(buildRootPath.parent.parent.url.path+"/Index/DataStore") else {
+        throw PEError.findIndexFailed(message: "find project: \(targetName) index under DerivedData failed")
+    }
+    
     guard let cwd = localFileSystem.currentWorkingDirectory else {
         throw PEError.fiendCurrentWorkingDirectoryFailed
     }
@@ -39,11 +46,12 @@ private func createConfiguration(options: CommandLineOptions) throws -> Configur
         throw PEError.findProjectFileFailed(message: "find project: \(targetName) Path failed")
     }
     
-    let configuration = Configuration(projectPath: projectPath, indexStorePath: indexStorePath)
+    let configuration = Configuration(projectPath: projectPath, indexStorePath: indexStorePath.url.path)
     
     return configuration
 }
 
+/*
 /// Find the index path, default is   ~Library/Developer/Xcode/DerivedData/<target>/Index/DataStore
 private func findIndexFile(targetName: String) throws -> String {
     let url = URL(fileURLWithPath: NSHomeDirectory()).appendingPathComponent("Library/Developer/Xcode/DerivedData")
@@ -61,6 +69,7 @@ private func findIndexFile(targetName: String) throws -> String {
     }
     throw PEError.findIndexFailed(message: "find project: \(targetName) index under DerivedData failed")
 }
+ */
 
 private extension ProcessInfo {
     func environmentVariable(name: String) throws -> String {
@@ -73,13 +82,14 @@ private extension ProcessInfo {
 
 // Default values for non-optional Commander Options
 struct EnvironmentKeys {
-  static let bundleIdentifier = "PRODUCT_BUNDLE_IDENTIFIER"
-  static let productModuleName = "PRODUCT_MODULE_NAME"
-  static let scriptInputFileCount = "SCRIPT_INPUT_FILE_COUNT"
-  static let scriptOutputFileCount = "SCRIPT_OUTPUT_FILE_COUNT"
-  static let target = "TARGET_NAME"
-  static let tempDir = "TEMP_DIR"
-  static let xcodeproj = "PROJECT_FILE_PATH"
+    static let bundleIdentifier = "PRODUCT_BUNDLE_IDENTIFIER"
+    static let productModuleName = "PRODUCT_MODULE_NAME"
+    static let scriptInputFileCount = "SCRIPT_INPUT_FILE_COUNT"
+    static let scriptOutputFileCount = "SCRIPT_OUTPUT_FILE_COUNT"
+    static let target = "TARGET_NAME"
+    static let tempDir = "TEMP_DIR"
+    static let xcodeproj = "PROJECT_FILE_PATH"
+    static let buildRoot = "BUILD_ROOT"
 }
 
 enum ProcessError: Error {
