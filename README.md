@@ -40,9 +40,13 @@ With that installed and on our `bin` folder, now we can use it.
   `/usr/local/bin/pecker`
   
   
-## Development
+## Contributions and support
 
-We'll love contributions, If you are interested in developing `pecker`, submit ideas and submit pull requests!
+`pecker` is developed completely in the open
+
+Any contributing and pull requests are warmly welcome., If you are interested in developing `pecker`, submit ideas and submit pull requests!
+
+## Contributors
 
 ## Licence
 UnusedResources is released under the [MIT License](https://opensource.org/licenses/MIT).
