@@ -102,8 +102,11 @@ enum PEError: Error {
     case findProjectFileFailed(message: String)
 }
 
-exit(main(CommandLine.arguments))
+DispatchQueue.global().async {
+    exit(main(CommandLine.arguments))
+}
 
+dispatchMain()
 
 
 

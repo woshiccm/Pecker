@@ -4,7 +4,7 @@ class Validation {
 
     private enum RegexTypes: Regex {
         // TODO: This is not the most correct regex, optimized after
-        case notOperator = "^[a-zA-Z]"
+        case notOperator = ".*[a-zA-Z]+.*"
     }
 
     static func isOperator(_ str: String) -> Bool {
