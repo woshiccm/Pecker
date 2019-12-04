@@ -41,6 +41,10 @@ extension DeadCodeDetecter {
             return false
         }
         
+        if symbol.roles.contains(.overrideOf) {
+            return false
+        }
+        
         let symbolOccurenceResults = server.occurrences(
             ofUSR: symbol.symbol.usr,
             roles: [.reference],

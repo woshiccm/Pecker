@@ -15,8 +15,10 @@ public final class SwiftVisitor: SyntaxVisitor {
     }
     
     public func visit(_ node: ClassDeclSyntax) -> SyntaxVisitorContinueKind {
-        if let position = findLocaiton(syntax: node.identifier) {
-            collect(SourceDetail(name: node.identifier.text, sourceKind: .class, location: position))
+        if TestsRule.collect(node) {
+            if let position = findLocaiton(syntax: node.identifier) {
+                collect(SourceDetail(name: node.identifier.text, sourceKind: .class, location: position))
+            }
         }
         return .visitChildren
     }
@@ -29,12 +31,14 @@ public final class SwiftVisitor: SyntaxVisitor {
     }
     
     public func visit(_ node: FunctionDeclSyntax) -> SyntaxVisitorContinueKind {
-        let ps = node.signature.input.parameterList.compactMap {
-            $0.firstName?.text
-        }
-        let function = Function(name: node.identifier.text, parameters: ps)
-        if let position = findLocaiton(syntax: node.identifier) {
-            collect(SourceDetail(name: function.description, sourceKind: .function, location: position))
+        if TestsRule.collect(node) {
+            let ps = node.signature.input.parameterList.compactMap {
+                $0.firstName?.text
+            }
+            let function = Function(name: node.identifier.text, parameters: ps)
+            if let position = findLocaiton(syntax: node.identifier) {
+                collect(SourceDetail(name: function.description, sourceKind: .function, location: position))
+            }
         }
         return .visitChildren
     }
@@ -70,7 +74,7 @@ public final class SwiftVisitor: SyntaxVisitor {
     public func visit(_ node: ExtensionDeclSyntax) -> SyntaxVisitorContinueKind {
         for token in node.extendedType.tokens {
             if let position = findLocaiton(syntax: token) {
-                sourceExtensions.append(SourceDetail(name: token.description , sourceKind: .extension, location: position))
+                sourceExtensions.append(SourceDetail(name: token.text , sourceKind: .extension, location: position))
             }
         }
         return .visitChildren

@@ -22,23 +22,22 @@ func checkWhitelist(source: SourceDetail) -> Bool {
     return false
 }
 
-
 /// The sources in whitelist don't need to detect
 let whitelist: [SourceDetail] = [SourceDetail(name: "AppDelegate", sourceKind: .class),
-                                 SourceDetail(name: "SceneDelegate", sourceKind: .class)
+                                 SourceDetail(name: "SceneDelegate", sourceKind: .class),
+                                 SourceDetail(name: "application(_:didFinishLaunchingWithOptions:)", sourceKind: .function),
+                                 SourceDetail(name: "applicationWillResignActive(_:) ", sourceKind: .function),
+                                 SourceDetail(name: "applicationDidEnterBackground(_:)", sourceKind: .function),
+                                 SourceDetail(name: "applicationWillEnterForeground(_:)", sourceKind: .function),
+                                 SourceDetail(name: "applicationDidBecomeActive(_:)", sourceKind: .function),
+                                 SourceDetail(name: "applicationWillTerminate(_:)", sourceKind: .function),
+                                 SourceDetail(name: "applicationDidFinishLaunching(_:) ", sourceKind: .function),
+                                 SourceDetail(name: "applicationDidReceiveMemoryWarning(_:)", sourceKind: .function),
+                                 SourceDetail(name: "application(_:configurationForConnecting:options:)", sourceKind: .function),
+                                 SourceDetail(name: "viewDidLoad()", sourceKind: .function),
+                                 SourceDetail(name: "viewDidAppear(_:)", sourceKind: .function),
+                                 SourceDetail(name: "viewWillAppear(_:)", sourceKind: .function),
+                                 SourceDetail(name: "viewWillDisappear(_:)", sourceKind: .function),
+                                 SourceDetail(name: "viewDidDisappear(_:)", sourceKind: .function)
                                 ]
 
-
-/*
-SourceDetail(name: "application(_:didFinishLaunchingWithOptions:)", sourceKind: .function),
-SourceDetail(name: "applicationWillResignActive(_:) ", sourceKind: .function),
-SourceDetail(name: "applicationDidEnterBackground(_:)", sourceKind: .function),
-SourceDetail(name: "applicationWillEnterForeground(_:)", sourceKind: .function),
-SourceDetail(name: "applicationDidBecomeActive(_:)", sourceKind: .function),
-SourceDetail(name: "applicationWillTerminate(_:)", sourceKind: .function),
-SourceDetail(name: "applicationDidFinishLaunching(_:) ", sourceKind: .function),
-SourceDetail(name: "applicationDidReceiveMemoryWarning(_:)", sourceKind: .function),
-SourceDetail(name: "application(_:configurationForConnecting:options:)", sourceKind: .function),
-SourceDetail(name: "viewDidLoad()", sourceKind: .function),
-SourceDetail(name: "viewDidAppear(_:)", sourceKind: .function)
-*/
