@@ -3,11 +3,11 @@ import Path
 import SwiftSyntax
 
 /// Collects source code in the path.
-public class SourceCollector {
+class SourceCollector {
     
     let path: Path
-    public var sources: [SourceDetail] = []
-    public var sourceExtensions: [SourceDetail] = []
+    var sources: [SourceDetail] = []
+    var sourceExtensions: [SourceDetail] = []
     
     init(path: Path) {
         self.path = path

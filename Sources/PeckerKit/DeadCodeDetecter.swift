@@ -5,7 +5,7 @@ import TSCBasic
 
 public final class DeadCodeDetecter {
     
-    public let sourceCodeCollector: SourceCollector
+    let sourceCodeCollector: SourceCollector
     let server: SourceKitServer
     let workSpace: Workspace
     
