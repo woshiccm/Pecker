@@ -36,10 +36,19 @@ extension DeadCodeDetecter {
     /// Detect  whether source code if used
     /// - Parameter source: The source code to detect
     private func detect(source: SourceDetail) -> Bool {
-        guard let symbol = findSymbol(source: source) else {
+        let symbols = server.findWorkspaceSymbols(matching: source.name)
+
+        // If not find symobol of source, means source used
+        guard let symbol = symbols.unique(of: source) else {
             return false
         }
-        
+
+        // Whether source symbol is overrided by other symbols, true means source used
+        let overrided = symbols.lazy.filter{ $0.symbol.usr != symbol.symbol.usr }.contains(where: { $0.isOverride(of: symbol) })
+        if overrided {
+            return false
+        }
+
         if symbol.roles.contains(.overrideOf) {
             return false
         }
@@ -56,18 +65,6 @@ extension DeadCodeDetecter {
         }
     }
     
-    /// Find source code symbol in the project index
-    /// - Parameter source: The souece code
-    private func findSymbol(source: SourceDetail) -> SymbolOccurrence? {
-        let symbols = server.findWorkspaceSymbols(matching: source.name)
-        for symbol in symbols {
-            if isEqual(source: source, symbol: symbol) {
-                return symbol
-            }
-        }
-        return nil
-    }
-    
     /// In the rule class, struct, enum and protocol extensions  are not meant to be used,
     /// But in symbol their extensions are defined as refered
     /// So we need to fitler their extensions
@@ -78,13 +75,7 @@ extension DeadCodeDetecter {
         guard source.needFilterExtension else {
             return symbols
         }
-        
+
         return symbols.lazy.filter { !$0.isSourceExtension(sources: &sourceCodeCollector.sourceExtensions) }
     }
-}
-
-func isEqual(source: SourceDetail, symbol: SymbolOccurrence) -> Bool {
-    return source.location.path == symbol.location.path &&
-        source.location.line == symbol.location.line &&
-        source.location.column == symbol.location.utf8Column
 }

@@ -16,7 +16,7 @@ and will optimization details.
 During the project development process, you may write a lot of code. Over time, a lot of code is no longer used, but it is difficult to find. Pecker can help you locate these unused code conveniently and accurately.
 
 ## Features
-`pecker` can detect the follow kinds of unused Swift code.
+`pecker` can detect the following kinds of unused Swift code.
 
 1. class
 2. struct
@@ -52,6 +52,82 @@ pecker [OPTIONS]
 * `-i/--index-store-path`: The Index path of your project, if unspecified, the default is ~Library/Developer/Xcode/DerivedData/<target>/Index/DataStore.
 
 Run `pecker` in the project target to detect. Project will be searched Swift files recursively.
+
+## Rules
+The basic principle is that if remove the code, the compiler will report errors.
+
+### Class, Struct, Protocols, Enums, Typealias
+
+1. Referenced elsewhere means used, except for extensions. 
+
+```swift
+
+protocol ExampleProtocol {
+    
+}
+
+class Example: ExampleProtocol {
+    
+}
+
+class Example {
+    
+}
+
+let example = Example()
+
+```
+The following  `UnusedExample` is unused.
+
+```
+class UnusedExample { // unused
+    
+}
+
+extension UnusedExample {
+    
+}
+```
+
+### functions
+The situation of function is very complicated, `override` is very special
+
+#### override 
+There are two kinds of `override`. If a function is override function, means used. If a function is overrided, means used.
+
+```
+// The first
+protocol ExampleProtocol {
+
+	func test()
+    
+}
+
+class Example: ExampleProtocol {
+
+    func test() {
+    }
+}
+
+// The second
+class Animal {
+    
+    func run() {
+        
+    }
+
+}
+
+class Dod: Animal {
+    
+    override func run() {
+        
+    }
+}
+
+
+```
+
 
 ## Note
 1. Don't detect public class, function, etc.

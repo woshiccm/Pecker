@@ -11,7 +11,6 @@ class SourceKitServer {
     
     func findWorkspaceSymbols(matching: String) -> [SymbolOccurrence] {
         var symbolOccurenceResults: [SymbolOccurrence] = []
-        workspace?.index?.pollForUnitChangesAndWait()
         workspace?.index?.forEachCanonicalSymbolOccurrence(
           containing: matching,
           anchorStart: false,
@@ -21,7 +20,6 @@ class SourceKitServer {
         ) { symbol in
             if !symbol.location.isSystem &&
                 !symbol.roles.contains(.accessorOf) &&
-                !symbol.roles.contains(.overrideOf) &&
                 symbol.roles.contains(.definition) {
             symbolOccurenceResults.append(symbol)
           }

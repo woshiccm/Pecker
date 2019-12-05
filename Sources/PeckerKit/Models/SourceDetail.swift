@@ -46,3 +46,9 @@ extension SourceDetail {
             sourceKind == .protocol
     }
 }
+
+extension SourceDetail {
+    var identifier: String {
+        return "\(location.path):\(location.line):\(location.column)"
+    }
+}
