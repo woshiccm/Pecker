@@ -15,11 +15,13 @@ fileprivate func main(_ arguments: [String]) -> Int32 {
             let configuration = try createConfiguration(options: options)
             let detecter = try DeadCodeDetecter(configuration: configuration)
             let unusedSources = try detecter.detect()
-            emit(sources: unusedSources)
-            return 0
+            if !options.hideWarning {
+                emit(sources: unusedSources)
+            }
         } catch {
             return 1
         }
+        return 0
     case .version:
         print("0.0.4")
         return 0
@@ -32,9 +34,19 @@ private func createConfiguration(options: CommandLineOptions) throws -> Configur
     
     /// Find the index path, default is   ~Library/Developer/Xcode/DerivedData/<target>/Index/DataStore
     let buildRoot = try processInfo.environmentVariable(name: EnvironmentKeys.buildRoot)
-    guard let buildRootPath = Path(buildRoot),
-        let indexStorePath = Path(buildRootPath.parent.parent.url.path+"/Index/DataStore") else {
-        throw PEError.findIndexFailed(message: "find project: \(targetName) index under DerivedData failed")
+    let indexStorePath: Path
+    if let indexStorePathString = options.indexStorePath {
+        if let path = Path(indexStorePathString) {
+            indexStorePath = path
+        } else {
+            throw PEError.indexStorePathPathWrong
+        }
+    } else {
+        guard let buildRootPath = Path(buildRoot),
+            let storePath = Path(buildRootPath.parent.parent.url.path+"/Index/DataStore") else {
+            throw PEError.findIndexFailed(message: "find project: \(targetName) index under DerivedData failed")
+        }
+        indexStorePath = storePath
     }
     
     guard let cwd = localFileSystem.currentWorkingDirectory else {
@@ -100,6 +112,7 @@ enum PEError: Error {
     case findIndexFailed(message: String)
     case fiendCurrentWorkingDirectoryFailed
     case findProjectFileFailed(message: String)
+    case indexStorePathPathWrong
 }
 
 DispatchQueue.global().async {

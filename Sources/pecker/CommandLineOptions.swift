@@ -1,7 +1,7 @@
 import Foundation
 import TSCUtility
 
-/// Collects the command line options that were passed to `elf`.
+/// Collects the command line options that were passed to `pecker`.
 struct CommandLineOptions {
     
     /// The project path
@@ -15,10 +15,10 @@ struct CommandLineOptions {
     /// The path to the index that should be loaded
     ///
     /// If not specified, the default is find from DerivedData with project name
-    var storePath: String?
+    var indexStorePath: String?
     
     /// Whether to show warning
-    var shouldShowWarning: Bool = true
+    var hideWarning: Bool = false
 }
 
 /// Process the command line argument strings and returns an object containing their values.
@@ -65,15 +65,15 @@ func processArguments(commandName: String, _ arguments: [String]) -> CommandLine
     // Bind the common options.
     binder.bind(
         option: parser.add(
-            option: "--store-path", shortName: "-s", kind: String.self,
+            option: "--index-store-path", shortName: "-i", kind: String.self,
             usage: "Specify project index path [default: ~/Library/Developer/Xcode/DerivedData]"),
-        to: { $0.storePath = $1 })
+        to: { $0.indexStorePath = $1 })
     
     binder.bind(
         option: parser.add(
-            option: "--show-warning", kind: Bool.self,
-            usage: "Show warning in source file"),
-        to: { $0.shouldShowWarning = $1 })
+            option: "--hide-warning", shortName: "-h", kind: Bool.self,
+            usage: "Hide warning in source file"),
+        to: { $0.hideWarning = $1 })
     
     var opts = CommandLineOptions()
     

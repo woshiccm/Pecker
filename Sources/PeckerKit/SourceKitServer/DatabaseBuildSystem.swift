@@ -1,14 +1,14 @@
 import Foundation
 
-public struct DatabaseBuildSystem {
+struct DatabaseBuildSystem {
     
     /// The path to the raw index store data, if any.
-    public var indexStorePath: String?
+    var indexStorePath: String?
     
     /// The path to put the index database, if any.
-    public var indexDatabasePath: String?
+    var indexDatabasePath: String?
     
-    public init(indexStorePath: String?, indexDatabasePath: String?) {
+    init(indexStorePath: String?, indexDatabasePath: String?) {
         self.indexStorePath = indexStorePath
         self.indexDatabasePath = indexDatabasePath
     }

@@ -10,7 +10,7 @@ public func recursiveFiles(withExtensions exts: [String], at path: Path) -> [Pat
     } else if path.isDirectory {
         var files: [Path] = []
         do {
-            for entry in try path.ls() {
+            for entry in try path.ls() where entry.path.basename() != "Pods" && entry.path.basename() != "Carthage" {
                 let list = recursiveFiles(withExtensions: exts, at: entry.path)
                 files.append(contentsOf: list)
             }

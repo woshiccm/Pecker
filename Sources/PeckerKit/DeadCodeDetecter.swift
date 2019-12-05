@@ -33,7 +33,6 @@ public final class DeadCodeDetecter {
 
 extension DeadCodeDetecter {
     
-    
     /// Detect  whether source code if used
     /// - Parameter source: The source code to detect
     private func detect(source: SourceDetail) -> Bool {
@@ -68,7 +67,6 @@ extension DeadCodeDetecter {
         }
         return nil
     }
-    
     
     /// In the rule class, struct, enum and protocol extensions  are not meant to be used,
     /// But in symbol their extensions are defined as refered

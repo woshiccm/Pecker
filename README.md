@@ -40,6 +40,24 @@ With that installed and on our `bin` folder, now we can use it.
   `/usr/local/bin/pecker`
   
   
+## Command Line Usage
+
+```
+pecker [OPTIONS]
+
+```
+
+* `-v/--version`: Prints the `swift-format` version and exits.
+* `-h/--hide-warning`: If specified, don't show warning.
+* `-i/--index-store-path`: The Index path of your project, if unspecified, the default is ~Library/Developer/Xcode/DerivedData/<target>/Index/DataStore.
+
+Run `pecker` in the project target to detect. Project will be searched Swift files recursively.
+
+## Note
+1. Don't detect public class, function, etc.
+2. Don't detect override function.
+3. Don't detect Pods and Carthage directory.
+  
 ## Contributions and support
 
 `pecker` is developed completely in the open
@@ -49,6 +67,6 @@ Any contributing and pull requests are warmly welcome., If you are interested in
 ## Contributors
 
 ## Licence
-UnusedResources is released under the [MIT License](https://opensource.org/licenses/MIT).
+`pecker` is released under the [MIT License](https://opensource.org/licenses/MIT).
 
 
