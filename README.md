@@ -47,7 +47,7 @@ pecker [OPTIONS]
 
 ```
 
-* `-v/--version`: Prints the `swift-format` version and exits.
+* `-v/--version`: Prints the `pecker` version and exits.
 * `-h/--hide-warning`: If specified, don't show warning.
 * `-i/--index-store-path`: The Index path of your project, if unspecified, the default is ~Library/Developer/Xcode/DerivedData/<target>/Index/DataStore.
 
