@@ -89,7 +89,7 @@ extension UnusedExample {
 }
 ```
 
-### functions
+### Functions
 The situation of function is very complicated, `override` is very special
 
 #### override 
