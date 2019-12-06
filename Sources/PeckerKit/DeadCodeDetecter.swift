@@ -14,6 +14,7 @@ public final class DeadCodeDetecter {
         let buildSystem = DatabaseBuildSystem(indexStorePath: configuration.indexStorePath,
                                               indexDatabasePath: configuration.indexDatabasePath)
         workSpace = try Workspace(buildSettings: buildSystem)
+        workSpace.index?.pollForUnitChangesAndWait()
         server = SourceKitServer(workspace: workSpace)
     }
     
