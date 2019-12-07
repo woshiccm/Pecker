@@ -14,10 +14,9 @@ class CollectPipeline: SyntaxVisitor {
     }
     
     func visit(_ node: ClassDeclSyntax) -> SyntaxVisitorContinueKind {
-        if rules.contains(where: { $0.skip(node) }) {
+        if skip(syntax: node) {
             return .visitChildren
         }
-        
         if let position = findLocaiton(syntax: node.identifier) {
             collect(SourceDetail(name: node.identifier.text, sourceKind: .class, location: position))
         }
@@ -25,7 +24,7 @@ class CollectPipeline: SyntaxVisitor {
     }
     
     func visit(_ node: StructDeclSyntax) -> SyntaxVisitorContinueKind {
-        if rules.contains(where: { $0.skip(node) }) {
+        if skip(syntax: node) {
             return .visitChildren
         }
         if let position = findLocaiton(syntax: node.identifier) {
@@ -35,7 +34,7 @@ class CollectPipeline: SyntaxVisitor {
     }
     
     func visit(_ node: FunctionDeclSyntax) -> SyntaxVisitorContinueKind {
-        if rules.contains(where: { $0.skip(node) }) {
+        if skip(syntax: node) {
             return .visitChildren
         }
         let ps = node.signature.input.parameterList.compactMap {
@@ -49,6 +48,9 @@ class CollectPipeline: SyntaxVisitor {
     }
     
     func visit(_ node: EnumDeclSyntax) -> SyntaxVisitorContinueKind {
+        if skip(syntax: node) {
+            return .visitChildren
+        }
         if let position = findLocaiton(syntax: node.identifier) {
             collect(SourceDetail(name: node.identifier.text, sourceKind: .enum, location: position))
         }
@@ -56,6 +58,9 @@ class CollectPipeline: SyntaxVisitor {
     }
     
     func visit(_ node: ProtocolDeclSyntax) -> SyntaxVisitorContinueKind {
+        if skip(syntax: node) {
+            return .visitChildren
+        }
         if let position = findLocaiton(syntax: node.identifier) {
             collect(SourceDetail(name: node.identifier.text, sourceKind: .protocol, location: position))
         }
@@ -63,6 +68,9 @@ class CollectPipeline: SyntaxVisitor {
     }
     
     func visit(_ node: TypealiasDeclSyntax) -> SyntaxVisitorContinueKind {
+        if skip(syntax: node) {
+            return .visitChildren
+        }
         if let position = findLocaiton(syntax: node.identifier) {
             collect(SourceDetail(name: node.identifier.text, sourceKind: .typealias, location: position))
         }
@@ -70,6 +78,9 @@ class CollectPipeline: SyntaxVisitor {
     }
     
     func visit(_ node: OperatorDeclSyntax) -> SyntaxVisitorContinueKind {
+        if skip(syntax: node) {
+            return .visitChildren
+        }
         if let position = findLocaiton(syntax: node.identifier) {
             collect(SourceDetail(name: node.identifier.text, sourceKind: .operator, location: position))
         }
@@ -77,6 +88,9 @@ class CollectPipeline: SyntaxVisitor {
     }
     
     func visit(_ node: ExtensionDeclSyntax) -> SyntaxVisitorContinueKind {
+        if rules.contains(where: { $0.skip(node) }) {
+            return .visitChildren
+        }
         for token in node.extendedType.tokens {
             if let position = findLocaiton(syntax: token) {
                 sourceExtensions.append(SourceDetail(name: token.text , sourceKind: .extension, location: position))
@@ -87,6 +101,18 @@ class CollectPipeline: SyntaxVisitor {
 }
 
 extension CollectPipeline {
+    
+    func skip(syntax: IdentifierSyntax) -> Bool {
+        // Skip the symbol in blacklist
+        if context.configuration.blacklistSymbols.contains(syntax.identifier.text) {
+            return true
+        }
+        // Rules check
+        if rules.contains(where: { $0.skip(syntax) }) {
+            return true
+        }
+        return false
+    }
     
     func collect(_ source: SourceDetail) {
         if !checkWhitelist(source: source) {

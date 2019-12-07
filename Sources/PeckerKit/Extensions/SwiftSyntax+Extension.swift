@@ -70,3 +70,16 @@ extension FunctionDeclSyntax: ModifierSyntax {}
 extension TypealiasDeclSyntax: ModifierSyntax {}
 extension OperatorDeclSyntax: ModifierSyntax {}
 extension ExtensionDeclSyntax: ModifierSyntax {}
+
+
+protocol IdentifierSyntax: Syntax {
+    var identifier: TokenSyntax { get }
+}
+
+extension ClassDeclSyntax: IdentifierSyntax {}
+extension StructDeclSyntax: IdentifierSyntax {}
+extension EnumDeclSyntax: IdentifierSyntax {}
+extension ProtocolDeclSyntax: IdentifierSyntax {}
+extension FunctionDeclSyntax: IdentifierSyntax {}
+extension TypealiasDeclSyntax: IdentifierSyntax {}
+extension OperatorDeclSyntax: IdentifierSyntax {}

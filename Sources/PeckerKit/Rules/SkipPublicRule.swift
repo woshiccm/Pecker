@@ -5,6 +5,9 @@ import SwiftSyntax
 struct SkipPublicRule: SourceCollectRule {
     
     func skip(_ node: Syntax) -> Bool {
-        return true
+        if let modifierSyntax = node as? ModifierSyntax {
+            return modifierSyntax.isPublic()
+        }
+        return false
     }
 }

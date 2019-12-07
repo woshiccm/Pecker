@@ -5,7 +5,12 @@ struct RuleFactory {
     /// Filter disabledRules and create rule
     /// - Parameter disabledRules: The TuleTypes need to disable
     static func make(_ disabledRules: [RuleType]?) -> [Rule] {
-        let rules = RuleType.allCases.filter{ disabledRules?.contains($0) ?? false }
+        let rules: [RuleType]
+        if let disabledRules = disabledRules {
+            rules = RuleType.allCases.filter{ !disabledRules.contains($0) }
+        } else {
+            rules = RuleType.allCases
+        }
         return rules.map(RuleFactory.make)
     }
     

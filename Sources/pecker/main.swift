@@ -14,8 +14,8 @@ fileprivate func main(_ arguments: [String]) -> Int32 {
     case .detect:
         do {
             let configuration = try createConfiguration(options: options)
-            let detecter = try DeadCodeDetecter(configuration: configuration)
-            let unusedSources = try detecter.detect()
+            let analyzer = try Analyzer(configuration: configuration)
+            let unusedSources = try analyzer.analyze()
             configuration.reporter.report(sources: unusedSources)
         } catch {
             log(error.localizedDescription, level: .error)
