@@ -16,9 +16,6 @@ struct CommandLineOptions {
     ///
     /// If not specified, the default is find from DerivedData with project name
     var indexStorePath: String?
-    
-    /// Whether to show warning
-    var hideWarning: Bool = false
 }
 
 /// Process the command line argument strings and returns an object containing their values.
@@ -68,12 +65,6 @@ func processArguments(commandName: String, _ arguments: [String]) -> CommandLine
             option: "--index-store-path", shortName: "-i", kind: String.self,
             usage: "Specify project index path [default: ~/Library/Developer/Xcode/DerivedData]"),
         to: { $0.indexStorePath = $1 })
-    
-    binder.bind(
-        option: parser.add(
-            option: "--hide-warning", shortName: "-h", kind: Bool.self,
-            usage: "Hide warning in source file"),
-        to: { $0.hideWarning = $1 })
     
     var opts = CommandLineOptions()
     

@@ -9,16 +9,16 @@ import IndexStoreDB
 fileprivate func main(_ arguments: [String]) -> Int32 {
     let url = URL(fileURLWithPath: arguments.first!)
     let options = processArguments(commandName: url.lastPathComponent, Array(arguments.dropFirst()))
+
     switch options.mode {
     case .detect:
         do {
             let configuration = try createConfiguration(options: options)
             let detecter = try DeadCodeDetecter(configuration: configuration)
             let unusedSources = try detecter.detect()
-            if !options.hideWarning {
-                emit(sources: unusedSources)
-            }
+            configuration.reporter.report(sources: unusedSources)
         } catch {
+            log(error.localizedDescription, level: .error)
             return 1
         }
         return 0
@@ -43,7 +43,7 @@ private func createConfiguration(options: CommandLineOptions) throws -> Configur
         }
     } else {
         guard let buildRootPath = Path(buildRoot),
-            let storePath = Path(buildRootPath.parent.parent.url.path+"/Index/DataStore") else {
+            let storePath = Path(buildRootPath.parent.parent.url.path + "/Index/DataStore") else {
             throw PEError.findIndexFailed(message: "find project: \(targetName) index under DerivedData failed")
         }
         indexStorePath = storePath

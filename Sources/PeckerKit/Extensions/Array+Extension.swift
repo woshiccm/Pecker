@@ -15,7 +15,5 @@ extension Array where Element == SymbolOccurrence {
 ///   - source: SourceDetail
 ///   - symbol: SymbolOccurrence
 func isEqual(source: SourceDetail, symbol: SymbolOccurrence) -> Bool {
-    return source.location.path == symbol.location.path &&
-        source.location.line == symbol.location.line &&
-        source.location.column == symbol.location.utf8Column
+    return source.identifier == symbol.identifier
 }

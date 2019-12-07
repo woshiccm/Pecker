@@ -10,6 +10,7 @@ let package = Package(
         .package(url: "https://github.com/mxcl/Path.swift.git", .exact("0.16.2")),
         .package(url: "https://github.com/apple/indexstore-db.git", .branch("swift-5.1-branch")),
         .package(url: "https://github.com/apple/swift-package-manager.git", .branch("master")),
+        .package(url: "https://github.com/jpsim/Yams.git", from: "2.0.0"),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -27,7 +28,8 @@ let package = Package(
                 "SwiftSyntax",
                 "Path",
                 "IndexStoreDB",
-                "TSCUtility"
+                "TSCUtility",
+                "Yams"
             ]
         ),
         .testTarget(

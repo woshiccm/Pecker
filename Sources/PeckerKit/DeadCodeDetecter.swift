@@ -8,9 +8,12 @@ public final class DeadCodeDetecter {
     let sourceCodeCollector: SourceCollector
     let server: SourceKitServer
     let workSpace: Workspace
+    private let configuration: Configuration?
     
     public init(configuration: Configuration) throws {
-        sourceCodeCollector = SourceCollector(path: configuration.projectPath)
+        sourceCodeCollector = SourceCollector(path: configuration.projectPath,
+                                              configuration: configuration)
+        self.configuration = configuration
         let buildSystem = DatabaseBuildSystem(indexStorePath: configuration.indexStorePath,
                                               indexDatabasePath: configuration.indexDatabasePath)
         workSpace = try Workspace(buildSettings: buildSystem)
@@ -66,7 +69,7 @@ extension DeadCodeDetecter {
         }
     }
     
-    /// In the rule class, struct, enum and protocol extensions  are not meant to be used,
+    /// In the rule class, struct, enum and protocol extensions  are not mean  used,
     /// But in symbol their extensions are defined as refered
     /// So we need to fitler their extensions
     /// - Parameters:

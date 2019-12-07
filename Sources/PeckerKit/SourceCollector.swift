@@ -4,13 +4,15 @@ import SwiftSyntax
 
 /// Collects source code in the path.
 class SourceCollector {
-    
-    let path: Path
+
     var sources: [SourceDetail] = []
     var sourceExtensions: [SourceDetail] = []
+    private let path: Path
+    private let configuration: Configuration
     
-    init(path: Path) {
+    init(path: Path, configuration: Configuration) {
         self.path = path
+        self.configuration = configuration
     }
 
     /// Populates the internal collections form the path source code
@@ -19,11 +21,13 @@ class SourceCollector {
         let files: [Path] = recursiveFiles(withExtensions: ["swift"], at: path)
         for file in files {
             let syntax = try SyntaxParser.parse(file.url)
-            let sourceLocationConverter = SourceLocationConverter(file: file.description, tree: syntax)
-            var visitor = SwiftVisitor(filePath: file.description, sourceLocationConverter: sourceLocationConverter)
-            syntax.walk(&visitor)
-            sources += visitor.sources
-            sourceExtensions += visitor.sourceExtensions
+            let context = CollectContext(configuration: configuration,
+                                         filePath: file.description,
+                                         sourceFileSyntax: syntax)
+            var pipeline = CollectPipeline(context: context)
+            syntax.walk(&pipeline)
+            sources += pipeline.sources
+            sourceExtensions += pipeline.sourceExtensions
         }
     }
 }

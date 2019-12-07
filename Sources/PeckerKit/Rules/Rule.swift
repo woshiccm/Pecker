@@ -1,6 +1,11 @@
 import Foundation
+import SwiftSyntax
 
-class Rule {
-    /// A list of all the source don't check
-    var whitelist = [SourceDetail]()
+public protocol Rule {}
+
+public protocol SourceCollectRule: Rule {
+    
+    func skip(_ node: Syntax) -> Bool
 }
+
+
