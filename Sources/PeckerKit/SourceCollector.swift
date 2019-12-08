@@ -12,6 +12,7 @@ class SourceCollector {
     private let targetPath: AbsolutePath
     private let excluded: [AbsolutePath]
     private let included: [AbsolutePath]
+    private let blacklistFiles: [String]
     /// The file system to operate on.
     public let fs: FileSystem
     
@@ -21,6 +22,7 @@ class SourceCollector {
         self.fs = localFileSystem
         self.excluded = configuration.excluded
         self.included = configuration.included
+        self.blacklistFiles = configuration.blacklistFiles
     }
 
     /// Populates the internal collections form the path source code
@@ -55,11 +57,14 @@ class SourceCollector {
             // FIXME: Ignore lproj directories.
             if ["xcodeproj", "playground", "xcworkspace", "lproj"].contains(curr.extension) { continue }
             
-//            // Ignore if this is an excluded path.
+            // Ignore if this is an excluded path.
             if self.excluded.contains(curr) { continue }
             
             // Ignore manifest files.
             if curr.basename == "Package.resolved" { continue }
+            
+            // Ignore if this is a blacklistFiles file.
+            if blacklistFiles.contains(curr.basenameWithoutExt) { continue  }
             
             // Append and continue if the path doesn't have an extension or is not a directory.
             if curr.extension == "swift" && !fs.isDirectory(curr) {
