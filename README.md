@@ -1,22 +1,19 @@
 # Pecker
 
-`pecker` is a tool to automatically detect unused code. It based on [IndexStoreDB](https://github.com/apple/indexstore-db.git) and [SwiftSyntax](https://github.com/apple/swift-syntax.git).
+`pecker` 是一个自动检测无用代码的工具，它基于 [IndexStoreDB](https://github.com/apple/indexstore-db.git) 和 [SwiftSyntax](https://github.com/apple/swift-syntax.git).
 
 ![屏幕快照 2019-12-03 下午4.25.38.png](https://upload-images.jianshu.io/upload_images/2086987-29c1e983fb5b604b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
-If you have questions, feel free to connect me, my Twitter [Roy](https://twitter.com/home), Email: `roy.cao1991@gmail.com`. 
+如果你有什么疑问可以随时联系我，我的推特 [Roy](https://twitter.com/home)，邮箱: `roy.cao1991@gmail.com`. 
 
-```
-NOTE: Current only support Swift unused code detect, will support Objective-C in the future,
-and will optimization details.
-```
 
-## Why use this?
+> Language Switch: [中文](README_CN.md).
 
-During the project development process, you may write a lot of code. Over time, a lot of code is no longer used, but it is difficult to find. Pecker can help you locate these unused code conveniently and accurately.
+## 为什么使它?
+在我们的项目开发过程中，会写很多代码，随着时间推移，很多代码已经不再使用了，但是想发现他们并不容易。`pecker`能很自动的帮你定位到它们。
 
-## Features
-`pecker` can detect the following kinds of unused Swift code.
+## 功能
+`pecker` 能检测以下几种无用的代码.
 
 1. class
 2. struct
@@ -26,60 +23,97 @@ During the project development process, you may write a lot of code. Over time, 
 6. typealias
 7. operator
 
-## Installation
+## 安装
 
-Clone the repo and run `make install`
+```
+$ git clone https://github.com/woshiccm/Pecker.git
+$ cd Pecker
+$ make install
+```
 
-With that installed and on our `bin` folder, now we can use it.
+之后`pecker`就被安装到你的`bin`目录下，现在你就可以使用它了。
 
-## Usage
+## 使用
 
-1. Click on your project in the file list, choose your target under TARGETS, click the Build Phases tab and add a New Run Script Phase by clicking the little plus icon in the top left.
-2. Paste the following script:
+### Xcode
+
+1. 打开你的项目，选择TARGETS，点击Build Phases，新建一个Run Script Phase .
+2. 放入以下脚本:
 
   `/usr/local/bin/pecker`
   
-  
-## Command Line Usage
+### 命令行
 
 ```
 pecker [OPTIONS]
 
 ```
 
-* `-v/--version`: Prints the `pecker` version and exits.
-* `-h/--hide-warning`: If specified, don't show warning.
-* `-i/--index-store-path`: The Index path of your project, if unspecified, the default is ~Library/Developer/Xcode/DerivedData/<target>/Index/DataStore.
+* `-v/--version`: 打印`pecker`版本.
+* `-i/--index-store-path`: 项目Index路径，如果没有指定，默认是~Library/Developer/Xcode/DerivedData/<target>/Index/DataStore.
 
-Run `pecker` in the project target to detect. Project will be searched Swift files recursively.
+在指定项目中执行 `pecker`，将会遍历检测所有的swift文件.
 
-## Rules
-The basic principle is that if remove the code, the compiler will report errors.
+### Rules
+目前`pecker`仅有连个规则，他们是`skip_public`和`xctest`，你和可以在`Source/PeckerKit/Rules`中查看他们的实现.
 
-### Class, Struct, Protocols, Enums, Typealias
+#### skip_public
+这个规则规定忽略public的class，struct，function等. 通常public的代码是开放给他人用的，很难判定这些代码是否是无用的。所以默认不检测public的代码。但有些时候，比如使用`submodule`的方式组织代码，那么你又想检测public的代码，你只需要把它添加到` disabled_rules`中。
 
-1. Referenced elsewhere means used, except for extensions. 
+#### xctest
+XCTest 很特别，我们规定忽略继承自XCTest的类，以及以"test"开头但没有参数的方法. 如果你不需要这个规则，可以把它添加到` disabled_rules`中.
+
+```swift
+class ExampleUITests: XCTestCase {
+
+    func testExample() { //used
+    }
+
+    func test(name: String) { // unused
+    }
+    
+    func get() { // unsed
+    }
+}
+
+```
+
+#### Other rules
+
+一下这些规则是默认使用的，你不能配置它们.
+
+**override**
+
+跳过声明为override的方法，包含子类的override方法和protocol extension override方法。
 
 ```swift
 
 protocol ExampleProtocol {
-    
+	func test() // used
 }
 
 class Example: ExampleProtocol {
-    
+    func test() { // used
+    }
 }
 
-class Example {
-    
+class Animal {
+    func run() {  // used
+    }
 }
 
-let example = Example()
+class Dod: Animal {
+    override func run() { // used
+    }
+}
 
 ```
-The following  `UnusedExample` is unused.
 
-```
+**extensions**
+
+extension也是引用，但是我们判定这不算做不被使用。
+
+```swift
 class UnusedExample { // unused
     
 }
@@ -87,62 +121,54 @@ class UnusedExample { // unused
 extension UnusedExample {
     
 }
-```
-
-### Functions
-The situation of function is very complicated, `override` is very special
-
-#### override 
-There are two kinds of `override`. If a function is override function, means used. If a function is overrided, means used.
-
-```
-// The first
-protocol ExampleProtocol {
-
-	func test()
-    
-}
-
-class Example: ExampleProtocol {
-
-    func test() {
-    }
-}
-
-// The second
-class Animal {
-    
-    func run() {
-        
-    }
-
-}
-
-class Dod: Animal {
-    
-    override func run() {
-        
-    }
-}
-
 
 ```
 
 
-## Note
-1. Don't detect public class, function, etc.
-2. Don't detect override function.
-3. Don't detect Pods and Carthage directory.
+### Configuration
+
+在`perker`项目中添加`.pecker.yml`，以下参数可以配置：
+
+规则包含:
+
+* `disabled_rules`: 从默认启用集中禁用规则.
+
+报告方式包含: 
+
+* xcode: 在Xcode中显示warning.
+* json: 生成warning的json文件.
+
+```yaml
+reporter: "xcode"
+
+disabled_rules:
+  - skip_public
+
+included: # paths to include during detecting. `--path` is ignored if present.
+  - ./
   
-## Contributions and support
+excluded: # paths to ignore during detecting. Takes precedence over `included`.
+  - Carthage
+  - Pods
 
-`pecker` is developed completely in the open
+blacklist_files: # files to ignore during detecting, only need to add file name, the file extension default is swift.
+  - HomeViewController
 
-Any contributing and pull requests are warmly welcome., If you are interested in developing `pecker`, submit ideas and submit pull requests!
+blacklist_symbols: # symbols to ignore during detecting, contains class, struct, enum, etc.
+  - AppDelegate
+  - viewDidLoad
+```
 
-## Contributors
+  
+## 贡献和支持
 
-## Licence
-`pecker` is released under the [MIT License](https://opensource.org/licenses/MIT).
+`pecker` 完全是一开放的方法开发.
+
+任何的贡献和pull requests都很受欢迎。如果你对开发`pecker`很感兴趣，提交你的想法和pull requests!
+
+## 贡献者
+
+## 协议
+[MIT License](https://opensource.org/licenses/MIT)许可.
 
 

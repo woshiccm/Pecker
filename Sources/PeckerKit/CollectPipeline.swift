@@ -88,9 +88,6 @@ class CollectPipeline: SyntaxVisitor {
     }
     
     func visit(_ node: ExtensionDeclSyntax) -> SyntaxVisitorContinueKind {
-        if rules.contains(where: { $0.skip(node) }) {
-            return .visitChildren
-        }
         for token in node.extendedType.tokens {
             if let position = findLocaiton(syntax: token) {
                 sourceExtensions.append(SourceDetail(name: token.text , sourceKind: .extension, location: position))
