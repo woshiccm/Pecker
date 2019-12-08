@@ -1,5 +1,4 @@
 import Foundation
-import Path
 import IndexStoreDB
 import TSCBasic
 
@@ -11,7 +10,7 @@ public final class Analyzer {
     private let configuration: Configuration?
     
     public init(configuration: Configuration) throws {
-        sourceCodeCollector = SourceCollector(path: configuration.projectPath,
+        sourceCodeCollector = SourceCollector(rootPath: configuration.projectPath,
                                               configuration: configuration)
         self.configuration = configuration
         let buildSystem = DatabaseBuildSystem(indexStorePath: configuration.indexStorePath,

@@ -1,5 +1,4 @@
 import Foundation
-import Path
 import TSCBasic
 
 /// Holds the complete set of configured values and defaults.
@@ -11,16 +10,16 @@ public struct Configuration {
     
     public let reporter: Reporter
     
-    public let included: [String]
+    public let included: [AbsolutePath]
     
-    public let excluded: [String]
+    public let excluded: [AbsolutePath]
     
     public let blacklistFiles: [String]
     
     public let blacklistSymbols: [String]
     
     /// The  project path
-    public let projectPath: Path
+    public let projectPath: AbsolutePath
     
     /// The project index storePath path
     public let indexStorePath: String
@@ -28,13 +27,13 @@ public struct Configuration {
     /// The project index database path
     public var indexDatabasePath: String
     
-    internal init(projectPath: Path,
+    internal init(projectPath: AbsolutePath,
                   indexStorePath: String,
                   indexDatabasePath: String? = nil,
                   rules: [Rule],
                   reporter: Reporter,
-                  included: [String],
-                  excluded: [String],
+                  included: [AbsolutePath],
+                  excluded: [AbsolutePath],
                   blacklistFiles: [String],
                   blacklistSymbols: [String]) {
         self.projectPath = projectPath
@@ -48,9 +47,8 @@ public struct Configuration {
         self.blacklistSymbols = blacklistSymbols
     }
     
-    public init(projectPath: Path, indexStorePath: String = "", indexDatabasePath: String? = nil) {
-        let rootPath = AbsolutePath(projectPath.url.path)
-        let fullPath = rootPath.appending(RelativePath(Configuration.fileName)).asURL.path
+    public init(projectPath: AbsolutePath, indexStorePath: String = "", indexDatabasePath: String? = nil) {
+        let fullPath = projectPath.appending(RelativePath(Configuration.fileName)).asURL.path
         var yamlConfiguration: YamlConfiguration?
         do {
             let yamlContents = try String(contentsOfFile: fullPath, encoding: .utf8)
@@ -68,8 +66,8 @@ public struct Configuration {
                   indexDatabasePath: indexDatabasePath,
                   rules: rules,
                   reporter: reporter,
-                  included: yamlConfiguration?.included ?? [],
-                  excluded: yamlConfiguration?.excluded ?? [],
+                  included: (yamlConfiguration?.included ?? [""]).map{ projectPath.appending(component: $0)},
+                  excluded: (yamlConfiguration?.excluded ?? []).map{ projectPath.appending(component: $0)} ,
                   blacklistFiles: yamlConfiguration?.blacklistFiles ?? [],
                   blacklistSymbols: yamlConfiguration?.blacklistSymbols ?? [])
     }

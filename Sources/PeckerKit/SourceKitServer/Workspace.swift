@@ -16,12 +16,12 @@ class Workspace {
         self.buildSettings = buildSettings
         
         if let storePath = buildSettings.indexStorePath,
-            let dbPath = buildSettings.indexStorePath {
+            let dbPath = buildSettings.indexDatabasePath {
             do {
                 let lib = try IndexStoreLibrary(dylibPath: Workspace.libIndexStore)
                 self.index = try IndexStoreDB(
                     storePath: URL(fileURLWithPath: storePath).path,
-                    databasePath: dbPath,
+                    databasePath: NSTemporaryDirectory() + "index_\(getpid())",
                     library: lib,
                     listenToUnitEvents: false)
                 log("opened IndexStoreDB at \(dbPath) with store path \(storePath)")

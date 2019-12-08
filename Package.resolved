@@ -11,15 +11,6 @@
         }
       },
       {
-        "package": "Path.swift",
-        "repositoryURL": "https://github.com/mxcl/Path.swift.git",
-        "state": {
-          "branch": null,
-          "revision": "f324b4a562ca421fd2905414a10fb0fc91d58b67",
-          "version": "0.16.2"
-        }
-      },
-      {
         "package": "llbuild",
         "repositoryURL": "https://github.com/apple/swift-llbuild.git",
         "state": {
