@@ -37,10 +37,6 @@ class SourceCollector {
             sources += pipeline.sources
             sourceExtensions += pipeline.sourceExtensions
         }
-        
-        for p in configuration.included {
-            emit(message: p.asURL.path)
-        }
     }
     
     /// Compute the contents of the files in a target.
