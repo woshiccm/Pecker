@@ -7,7 +7,7 @@ public typealias FileSystem = TSCBasic.FileSystem
 class SourceCollector {
 
     var sources: [SourceDetail] = []
-    var sourceExtensions: [SourceDetail] = []
+    var sourceExtensions: [String: SourceDetail] = [:]
     private let configuration: Configuration
     private let targetPath: AbsolutePath
     private let excluded: [AbsolutePath]
