@@ -79,7 +79,6 @@ extension Analyzer {
         guard source.needFilterExtension else {
             return symbols
         }
-
         return symbols.lazy.filter { !$0.isSourceExtension(sources: &sourceCodeCollector.sourceExtensions) }
     }
 }

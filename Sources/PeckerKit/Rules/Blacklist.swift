@@ -10,10 +10,10 @@ func createDefaultLocation() -> SourceLocation {
     return SourceLocation(path: "", line: 0, column: 0, offset: 0)
 }
 
-/// Check if whitelist contain the giving source, if contain, don't need to detect
+/// Check if blacklist contain the giving source, if contain, ignore.
 /// - Parameter source: The giving source
-func checkWhitelist(source: SourceDetail) -> Bool {
-    for s in whitelist {
+func checkBlacklist(source: SourceDetail) -> Bool {
+    for s in blacklist {
         if source.name == s.name && source.sourceKind == s.sourceKind {
             return true
         }
@@ -22,8 +22,8 @@ func checkWhitelist(source: SourceDetail) -> Bool {
     return false
 }
 
-/// The sources in whitelist don't need to detect
-let whitelist: [SourceDetail] = [SourceDetail(name: "AppDelegate", sourceKind: .class),
+/// The sources in blacklist ignore.
+let blacklist: [SourceDetail] = [SourceDetail(name: "AppDelegate", sourceKind: .class),
                                  SourceDetail(name: "SceneDelegate", sourceKind: .class),
                                  SourceDetail(name: "application(_:didFinishLaunchingWithOptions:)", sourceKind: .function),
                                  SourceDetail(name: "applicationWillResignActive(_:) ", sourceKind: .function),

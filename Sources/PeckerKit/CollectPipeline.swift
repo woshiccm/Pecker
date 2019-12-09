@@ -4,7 +4,7 @@ import SwiftSyntax
 class CollectPipeline: SyntaxVisitor {
     
     var sources: [SourceDetail] = []
-    var sourceExtensions: [SourceDetail] = []
+    var sourceExtensions: [String: SourceDetail] = [:]
     private let context: CollectContext
     private var rules: [SourceCollectRule] = []
     
@@ -90,7 +90,8 @@ class CollectPipeline: SyntaxVisitor {
     func visit(_ node: ExtensionDeclSyntax) -> SyntaxVisitorContinueKind {
         for token in node.extendedType.tokens {
             if let position = findLocaiton(syntax: token) {
-                sourceExtensions.append(SourceDetail(name: token.text , sourceKind: .extension, location: position))
+                let source = SourceDetail(name: token.text , sourceKind: .extension, location: position)
+                sourceExtensions[source.identifier] = source
             }
         }
         return .visitChildren
@@ -112,7 +113,7 @@ extension CollectPipeline {
     }
     
     func collect(_ source: SourceDetail) {
-        if !checkWhitelist(source: source) {
+        if !checkBlacklist(source: source) {
             sources.append(source)
         }
     }
