@@ -4,7 +4,7 @@
 
 ![屏幕快照 2019-12-03 下午4.25.38.png](https://upload-images.jianshu.io/upload_images/2086987-29c1e983fb5b604b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
-如果你有什么疑问可以随时联系我，我的推特 [Roy](https://twitter.com/home)，邮箱: `roy.cao1991@gmail.com`. 
+如果你有什么疑问可以随时联系我，我的推特 [Roy](https://twitter.com/Roy78463507)，邮箱: `roy.cao1991@gmail.com`. 
 
 
 > Language Switch: [中文](README_CN.md).
