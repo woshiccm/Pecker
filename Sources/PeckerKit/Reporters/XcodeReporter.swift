@@ -6,7 +6,7 @@ public struct XcodeReporter: Reporter {
     public func report(sources: [SourceDetail]) {
         let diagnosticEngine = makeDiagnosticEngine()
         for source in sources {
-            let message = Diagnostic.Message(.warning, "Pecker: \(source.sourceKind) \(source.name) was never used; conside remove it")
+            let message = Diagnostic.Message(.warning, "Pecker: \(source.sourceKind) \(source.name) was never used; consider removing it")
             diagnosticEngine.diagnose(message, location: source.location.toSSLocation, actions: nil)
         }
     }
