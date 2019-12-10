@@ -38,6 +38,7 @@ let blacklist: [SourceDetail] = [SourceDetail(name: "AppDelegate", sourceKind: .
                                  SourceDetail(name: "viewDidAppear(_:)", sourceKind: .function),
                                  SourceDetail(name: "viewWillAppear(_:)", sourceKind: .function),
                                  SourceDetail(name: "viewWillDisappear(_:)", sourceKind: .function),
-                                 SourceDetail(name: "viewDidDisappear(_:)", sourceKind: .function)
+                                 SourceDetail(name: "viewDidDisappear(_:)", sourceKind: .function),
+                                 SourceDetail(name: "CodingKeys", sourceKind: .enum)
                                 ]
 
