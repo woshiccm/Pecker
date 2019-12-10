@@ -49,19 +49,9 @@ class SourceCollector {
         var queue: [AbsolutePath] = [targetPath]
         
         while let curr = queue.popLast() {
-            // Ignore dot files.
-            if curr.basename.hasPrefix(".") { continue }
-            
-            // Ignore xcodeproj and playground directories.
-            //
-            // FIXME: Ignore lproj directories.
-            if ["xcodeproj", "playground", "xcworkspace", "lproj"].contains(curr.extension) { continue }
             
             // Ignore if this is an excluded path.
             if self.excluded.contains(curr) { continue }
-            
-            // Ignore manifest files.
-            if curr.basename == "Package.resolved" { continue }
             
             // Ignore if this is a blacklistFiles file.
             if blacklistFiles.contains(curr.basenameWithoutExt) { continue  }
