@@ -26,10 +26,19 @@ During the project development process, you may write a lot of code. Over time, 
 
 ## Installation
 
+### Manually
+
 ```
 $ git clone https://github.com/woshiccm/Pecker.git
 $ cd Pecker
 $ make install
+```
+
+### mint
+
+```
+mint install woshiccm/Pecker
+
 ```
 
 With that installed and on our `bin` folder, now we can use it.

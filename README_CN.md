@@ -25,10 +25,18 @@
 
 ## 安装
 
+### 手动
+
 ```
 $ git clone https://github.com/woshiccm/Pecker.git
 $ cd Pecker
 $ make install
+```
+
+### mint
+
+```
+mint install woshiccm/Pecker
 ```
 
 之后`pecker`就被安装到你的`bin`目录下，现在你就可以使用它了。
