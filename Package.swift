@@ -5,6 +5,9 @@ import PackageDescription
 
 let package = Package(
     name: "pecker",
+    products: [
+        .executable(name: "pecker", targets: ["Pecker"])
+    ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-syntax.git", .exact("0.50100.0")),
         .package(url: "https://github.com/apple/indexstore-db.git", .branch("swift-5.1-branch")),
@@ -15,7 +18,7 @@ let package = Package(
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
-            name: "pecker",
+            name: "Pecker",
             dependencies: [
                 "PeckerKit",
                 "TSCUtility"]
@@ -31,6 +34,6 @@ let package = Package(
         ),
         .testTarget(
             name: "PeckerTests",
-            dependencies: ["pecker"]),
+            dependencies: ["Pecker"]),
     ]
 )
