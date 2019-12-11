@@ -20,6 +20,8 @@ struct RuleFactory {
             return SkipPublicRule()
         case .xctest:
             return XCTestRule()
+        case .attributes:
+            return AttributesRule()
         }
     }
 }
