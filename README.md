@@ -67,7 +67,7 @@ Run `pecker` in the project target to detect. Project will be searched Swift fil
 
 ### Rules
 
-Current only 3 rules are included in Pecker, They are `skip_public`, `xctest` and `attributes`, You can also check Source/PeckerKit/Rules directory to see their implementation.
+Current only 4 rules are included in Pecker, They are `skip_public`, `xctest`, `attributes` and `xml`, You can also check Source/PeckerKit/Rules directory to see their implementation.
 
 #### skip_public
 This rule means skip detect public class, struct, function, etc. Usually the public code is provided for other users, so it is difficult to determine whether it is used. So we don't detect it by default. But in some cases, such as using `submodule` to organize code, you need to detect public code, you can add it to ` disabled_rules`.
@@ -99,6 +99,10 @@ If a Declaration contains the attribute in `BlackListAttribute`, skip. Such as `
 }
 
 ```
+
+#### xml
+If code is used in xib or storyboard, it also means used.You can add it to ` disabled_rules` if you don't need it.
+
 
 #### Other rules
 
