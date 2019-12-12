@@ -5,9 +5,11 @@ import TSCBasic
 public final class Analyzer {
     
     private let sourceCodeCollector: SourceCollector
-    private let server: SourceKitServer
+    private let sourceKitserver: SourceKitServer
     private let workSpace: Workspace
-    private let configuration: Configuration?
+    private let configuration: Configuration
+    private var xmlRule: XMLRule?
+    private var xmlServer: XMLServer?
     
     public init(configuration: Configuration) throws {
         sourceCodeCollector = SourceCollector(rootPath: configuration.projectPath,
@@ -17,7 +19,17 @@ public final class Analyzer {
                                               indexDatabasePath: configuration.indexDatabasePath)
         workSpace = try Workspace(buildSettings: buildSystem)
         workSpace.index?.pollForUnitChangesAndWait()
-        server = SourceKitServer(workspace: workSpace)
+        sourceKitserver = SourceKitServer(workspace: workSpace)
+        
+        let xmlRules = configuration.rules.lazy.compactMap{ $0 as? XMLRule }
+        if let xmlRule = xmlRules.first {
+            let xmlServer = XMLServer(rootPath: configuration.projectPath,
+                                      configuration: configuration)
+            self.xmlServer = xmlServer
+            self.xmlServer?.bootstrap()
+            xmlRule.server = xmlServer
+            self.xmlRule = xmlRule
+        }
     }
     
     public func analyze() throws -> [SourceDetail] {
@@ -25,7 +37,7 @@ public final class Analyzer {
         try sourceCodeCollector.collect()
         
         for source in sourceCodeCollector.sources {
-            if analyze(source: source) {
+            if !analyze(source: source) {
                 deadSources.append(source)
             }
         }
@@ -38,35 +50,40 @@ extension Analyzer {
     /// Detect  whether source code if used
     /// - Parameter source: The source code to detect.
     private func analyze(source: SourceDetail) -> Bool {
-        let symbols = server.findWorkspaceSymbols(matching: source.name)
+        let symbols = sourceKitserver.findWorkspaceSymbols(matching: source.name)
 
         // If not find symobol of source, means source used.
         guard let symbol = symbols.unique(of: source) else {
-            return false
+            return true
         }
 
         // Skip declarations that override another. This works for both subclass overrides &
         // protocol extension overrides.
         let overrided = symbols.lazy.filter{ $0.symbol.usr != symbol.symbol.usr }.contains(where: { $0.isOverride(of: symbol) })
         if overrided {
-            return false
+            return true
         }
 
         if symbol.roles.contains(.overrideOf) {
-            return false
+            return true
         }
         
-        let symbolOccurenceResults = server.occurrences(
+        let symbolOccurenceResults = sourceKitserver.occurrences(
             ofUSR: symbol.symbol.usr,
             roles: [.reference],
             workspace: workSpace)
         
         // Skip extensions, the extension of class, struct, etc, don't means refenced.
         if filterExtension(source: source, symbols: symbolOccurenceResults).count > 0 {
-            return false
-        } else {
             return true
         }
+        
+        // XMLRule anzlyze
+        if let xmlRule = self.xmlRule, xmlRule.analyze(source) {
+            return true
+        }
+                
+        return false
     }
     
     /// In the rule class, struct, enum and protocol extensions  are not mean  used,

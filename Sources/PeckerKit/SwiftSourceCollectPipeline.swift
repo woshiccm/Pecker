@@ -1,7 +1,7 @@
 import Foundation
 import SwiftSyntax
 
-class CollectPipeline: SyntaxVisitor {
+class SwiftSourceCollectPipeline: SyntaxVisitor {
     
     var sources: [SourceDetail] = []
     var sourceExtensions: [String: SourceDetail] = [:]
@@ -98,7 +98,7 @@ class CollectPipeline: SyntaxVisitor {
     }
 }
 
-extension CollectPipeline {
+extension SwiftSourceCollectPipeline {
     
     func skip(syntax: IdentifierSyntax) -> Bool {
         // Skip the symbol in blacklist

@@ -63,7 +63,7 @@ pecker [OPTIONS]
 在指定项目中执行 `pecker`，将会遍历检测所有的swift文件。
 
 ### Rules
-目前`pecker`仅有连个规则，他们是`skip_public`和`xctest`，你和可以在`Source/PeckerKit/Rules`中查看他们的实现。
+目前`pecker`仅有4个规则，他们是`skip_public`，`xctest`，`attributes`和 `xml`，你和可以在`Source/PeckerKit/Rules`中查看他们的实现。
 
 #### skip_public
 这个规则规定忽略public的class，struct，function等. 通常public的代码是开放给他人用的，很难判定这些代码是否是无用的。所以默认不检测public的代码。但有些时候，比如使用`submodule`的方式组织代码，那么你又想检测public的代码，你只需要把它添加到` disabled_rules`中。
@@ -95,6 +95,9 @@ class ExampleUITests: XCTestCase {
 }
 
 ```
+
+#### xml
+如果代码在xib或者storyboard中被用到，也表示被使用。。如果你不需要这个规则，可以把它添加到` disabled_rules`中。
 
 #### Other rules
 

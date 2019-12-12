@@ -22,6 +22,8 @@ struct RuleFactory {
             return XCTestRule()
         case .attributes:
             return AttributesRule()
+        case .xml:
+            return XMLRule()
         }
     }
 }

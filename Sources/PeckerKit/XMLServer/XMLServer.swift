@@ -1,43 +1,29 @@
 import Foundation
-import SwiftSyntax
 import TSCBasic
-public typealias FileSystem = TSCBasic.FileSystem
 
-/// Collects source code in the path.
-class SourceCollector {
-
-    var sources: [SourceDetail] = []
-    var sourceExtensions: [String: SourceDetail] = [:]
-    private let configuration: Configuration
+class XMLServer {
+    
     private let targetPath: AbsolutePath
     private let excluded: [AbsolutePath]
     private let included: [AbsolutePath]
-    private let blacklistFiles: [String]
     /// The file system to operate on.
     private let fs: FileSystem
     
+    private var xmlDB: Set<XMLElement> = []
+    
     init(rootPath: AbsolutePath, configuration: Configuration) {
         self.targetPath = rootPath
-        self.configuration = configuration
         self.excluded = configuration.excluded
         self.included = configuration.included
-        self.blacklistFiles = configuration.blacklistFiles
         self.fs = localFileSystem
     }
-
-    /// Populates the internal collections form the path source code
-    /// Currently only supports Swift
-    func collect() throws {
-        let files = computeContents()
-        for file in files {
-            let syntax = try SyntaxParser.parse(file.asURL)
-            let context = CollectContext(configuration: configuration,
-                                         filePath: file.description,
-                                         sourceFileSyntax: syntax)
-            var pipeline = SwiftSourceCollectPipeline(context: context)
-            syntax.walk(&pipeline)
-            sources += pipeline.sources
-            sourceExtensions += pipeline.sourceExtensions
+    
+    func bootstrap() {
+        let xmlFiles = computeContents()
+        for file in xmlFiles {
+            let xmlParser = XMLParserCoordinator(filePath: file)
+            xmlParser.parse()
+            xmlDB = xmlDB.union(xmlParser.xmlElements)
         }
     }
     
@@ -53,8 +39,8 @@ class SourceCollector {
             // Ignore if this is an excluded path.
             if self.excluded.contains(curr) { continue }
             
-            // Append and continue if the path doesn't have an extension or is not a directory and is not in lacklistFiles.
-            if curr.extension == "swift" && !fs.isDirectory(curr) && !blacklistFiles.contains(curr.basenameWithoutExt) {
+            // Append and continue if the path doesn't have an extension or is not a directory.
+            if (curr.extension == "xib" || curr.extension == "storyboard" ) && !fs.isDirectory(curr) {
                 contents.append(curr)
                 continue
             }
@@ -69,5 +55,12 @@ class SourceCollector {
         }
         
         return contents
+    }
+}
+
+extension XMLServer {
+    
+    func findXMLElement(matching: String) -> [XMLElement] {
+        return xmlDB.filter { $0.name == matching }
     }
 }
