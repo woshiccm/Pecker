@@ -13,8 +13,8 @@ class SourceKitServer {
         var symbolOccurenceResults: [SymbolOccurrence] = []
         workspace?.index?.forEachCanonicalSymbolOccurrence(
           containing: matching,
-          anchorStart: false,
-          anchorEnd: false,
+          anchorStart: true,
+          anchorEnd: true,
           subsequence: true,
           ignoreCase: true
         ) { symbol in
