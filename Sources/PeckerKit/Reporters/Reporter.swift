@@ -2,5 +2,5 @@ import Foundation
 
 public protocol Reporter {
     
-    func report(sources: [SourceDetail])
+    func report(_ configuration: Configuration, sources: [SourceDetail])
 }

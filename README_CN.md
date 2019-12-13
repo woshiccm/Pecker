@@ -157,7 +157,8 @@ extension UnusedExample {
 报告方式包含: 
 
 * xcode: 在Xcode中显示warning。
-* json: 生成warning的json文件。
+* json: 生成名为`pecker.result.json`的文件，你可以通过`output_file`来自定义路径，如果没有指定，默认为当前检测项目的文件下的路径。
+  ![屏幕快照 2019-12-13 下午9.49.09.png](https://upload-images.jianshu.io/upload_images/2086987-29dbe4bb76af16ec.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ```yaml
 reporter: "xcode"
@@ -178,6 +179,8 @@ blacklist_files: # files to ignore during detecting, only need to add file name,
 blacklist_symbols: # symbols to ignore during detecting, contains class, struct, enum, etc.
   - AppDelegate
   - viewDidLoad
+
+output_file: "/Users/ming/Desktop/PeckerResultDirectory"
 ```
 
   

@@ -18,6 +18,8 @@ public struct Configuration {
     
     public let blacklistSymbols: [String]
     
+    public let outputFile: AbsolutePath
+    
     /// The  project path
     public let projectPath: AbsolutePath
     
@@ -35,7 +37,8 @@ public struct Configuration {
                   included: [AbsolutePath],
                   excluded: [AbsolutePath],
                   blacklistFiles: [String],
-                  blacklistSymbols: [String]) {
+                  blacklistSymbols: [String],
+                  outputFile: AbsolutePath) {
         self.projectPath = projectPath
         self.indexStorePath = indexStorePath
         self.indexDatabasePath = indexDatabasePath ?? NSTemporaryDirectory() + "index_\(getpid())"
@@ -45,6 +48,7 @@ public struct Configuration {
         self.excluded = excluded
         self.blacklistFiles = blacklistFiles
         self.blacklistSymbols = blacklistSymbols
+        self.outputFile = outputFile
     }
     
     public init(projectPath: AbsolutePath, indexStorePath: String = "", indexDatabasePath: String? = nil) {
@@ -61,6 +65,7 @@ public struct Configuration {
         
         let reporter = ReporterFactory.make(yamlConfiguration?.reporter)
         let rules = RuleFactory.make(yamlConfiguration?.disabledRules)
+        let outputFilePath = AbsolutePath(yamlConfiguration?.outputFile ?? projectPath.asURL.path).appending(component: "pecker.result.json")
         self.init(projectPath: projectPath,
                   indexStorePath: indexStorePath,
                   indexDatabasePath: indexDatabasePath,
@@ -69,6 +74,7 @@ public struct Configuration {
                   included: (yamlConfiguration?.included ?? [""]).map{ projectPath.appending(component: $0)},
                   excluded: (yamlConfiguration?.excluded ?? []).map{ projectPath.appending(component: $0)} ,
                   blacklistFiles: yamlConfiguration?.blacklistFiles ?? [],
-                  blacklistSymbols: yamlConfiguration?.blacklistSymbols ?? [])
+                  blacklistSymbols: yamlConfiguration?.blacklistSymbols ?? [],
+                  outputFile: outputFilePath)
     }
 }

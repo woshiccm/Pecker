@@ -20,6 +20,9 @@ public struct YamlConfiguration: Decodable {
     /// Acts as a blacklist, the  symbols specified in this list will ignore
     public let blacklistSymbols: [String]?
     
+    /// The path of the output  json file
+    public let outputFile: String?
+    
     enum CodingKeys: String, CodingKey {
         case disabledRules = "disabled_rules"
         case reporter
@@ -27,6 +30,7 @@ public struct YamlConfiguration: Decodable {
         case excluded
         case blacklistFiles = "blacklist_files"
         case blacklistSymbols = "blacklist_symbols"
+        case outputFile = "output_file"
     }
     
     public init(from decoder: Decoder) throws {
@@ -37,6 +41,7 @@ public struct YamlConfiguration: Decodable {
         self.excluded = try container.decodeIfPresent([String].self, forKey: .excluded)
         self.blacklistFiles = try container.decodeIfPresent([String].self, forKey: .blacklistFiles)
         self.blacklistSymbols = try container.decodeIfPresent([String].self, forKey: .blacklistSymbols)
+        self.outputFile = try container.decodeIfPresent(String.self, forKey: .outputFile)
     }
 }
 
@@ -49,6 +54,7 @@ extension YamlConfiguration: Hashable {
         hasher.combine(excluded)
         hasher.combine(blacklistFiles)
         hasher.combine(blacklistSymbols)
+        hasher.combine(outputFile)
     }
     
     public static func == (lhs: YamlConfiguration, rhs: YamlConfiguration) -> Bool {
@@ -57,6 +63,7 @@ extension YamlConfiguration: Hashable {
             (lhs.included == rhs.included) &&
             (lhs.excluded == rhs.excluded) &&
             (lhs.blacklistFiles == rhs.blacklistFiles) &&
-            (lhs.blacklistSymbols == rhs.blacklistSymbols)
+            (lhs.blacklistSymbols == rhs.blacklistSymbols) &&
+            (lhs.outputFile == rhs.outputFile)
     }
 }
