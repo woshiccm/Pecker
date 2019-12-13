@@ -3,7 +3,7 @@ import SwiftSyntax
 
 public struct XcodeReporter: Reporter {
     
-    public func report(sources: [SourceDetail]) {
+    public func report(_ configuration: Configuration, sources: [SourceDetail]) {
         let diagnosticEngine = makeDiagnosticEngine()
         for source in sources {
             let message = Diagnostic.Message(.warning, "Pecker: \(source.sourceKind) \(source.name) was never used; consider removing it")

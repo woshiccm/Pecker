@@ -163,7 +163,9 @@ Rule inclusion:
 Reporter inclusion: 
 
 * xcode: Warnings displayed in the IDE.
-* json: Generate a warnings json file.
+* json: Generate a json file named `pecker.result.json`, you can set path by `output_file`, if unspecified, the default is current project directory path.
+
+   ![屏幕快照 2019-12-13 下午9.49.09.png](https://upload-images.jianshu.io/upload_images/2086987-29dbe4bb76af16ec.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ```yaml
 reporter: "xcode"
@@ -184,6 +186,8 @@ blacklist_files: # files to ignore during detecting, only need to add file name,
 blacklist_symbols: # symbols to ignore during detecting, contains class, struct, enum, etc.
   - AppDelegate
   - viewDidLoad
+
+output_file: "/Users/ming/Desktop/PeckerResultDirectory"
 ```
 
   
