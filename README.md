@@ -128,7 +128,7 @@ class Animal {
     }
 }
 
-class Dod: Animal {
+class Dog: Animal {
     override func run() { // used
     }
 }
