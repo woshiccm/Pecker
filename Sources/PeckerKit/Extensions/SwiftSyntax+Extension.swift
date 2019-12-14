@@ -83,3 +83,25 @@ extension ProtocolDeclSyntax: IdentifierSyntax {}
 extension FunctionDeclSyntax: IdentifierSyntax {}
 extension TypealiasDeclSyntax: IdentifierSyntax {}
 extension OperatorDeclSyntax: IdentifierSyntax {}
+
+extension TriviaPiece {
+    public var comment: String? {
+        switch self {
+        case .spaces,
+             .tabs,
+             .verticalTabs,
+             .formfeeds,
+             .newlines,
+             .carriageReturns,
+             .carriageReturnLineFeeds,
+             .backticks,
+             .garbageText:
+            return nil
+        case .lineComment(let comment),
+             .blockComment(let comment),
+             .docLineComment(let comment),
+             .docBlockComment(let comment):
+            return comment
+        }
+    }
+}

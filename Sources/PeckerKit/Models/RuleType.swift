@@ -6,4 +6,5 @@ public enum RuleType: String, Decodable, CaseIterable {
     case xctest
     case attributes
     case xml
+    case comment
 }

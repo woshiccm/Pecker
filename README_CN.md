@@ -63,13 +63,13 @@ pecker [OPTIONS]
 在指定项目中执行 `pecker`，将会遍历检测所有的swift文件。
 
 ### Rules
-目前`pecker`仅有4个规则，他们是`skip_public`，`xctest`，`attributes`和 `xml`，你和可以在`Source/PeckerKit/Rules`中查看他们的实现。
+目前`pecker`仅有5个规则，他们是`skip_public`、`xctest`、`attributes`、`xml`和`comment`，如果你不需要这些中的某些规则，可以把它添加到` disabled_rules`中。你和可以在`Source/PeckerKit/Rules`中查看他们的实现。
 
 #### skip_public
 这个规则规定忽略public的class，struct，function等. 通常public的代码是开放给他人用的，很难判定这些代码是否是无用的。所以默认不检测public的代码。但有些时候，比如使用`submodule`的方式组织代码，那么你又想检测public的代码，你只需要把它添加到` disabled_rules`中。
 
 #### xctest
-XCTest 很特别，我们规定忽略继承自XCTest的类，以及以"test"开头但没有参数的方法. 如果你不需要这个规则，可以把它添加到` disabled_rules`中。
+XCTest 很特别，我们规定忽略继承自XCTest的类，以及以"test"开头但没有参数的方法。
 
 ```swift
 class ExampleUITests: XCTestCase {
@@ -87,8 +87,7 @@ class ExampleUITests: XCTestCase {
 ```
 
 #### attributes
-如果一个声明的修饰符中包含`BlackListAttribute`中的case, 忽略这个检测。例如`IBAction`，我们在持续收集这些修饰符，如果你发现新的cases，请告诉我们。如果你不需要这个规则，可以把它添加到` disabled_rules`中。
-
+如果一个声明的修饰符中包含`BlackListAttribute`中的case, 忽略这个检测。例如`IBAction`，我们在持续收集这些修饰符，如果你发现新的cases，请告诉我们。
 ```swift
 @IBAction func buttonTap(_ sender: Any) { // used
         
@@ -98,6 +97,55 @@ class ExampleUITests: XCTestCase {
 
 #### xml
 如果代码在xib或者storyboard中被用到，也表示被使用。。如果你不需要这个规则，可以把它添加到` disabled_rules`中。
+
+#### comment
+可以通过在源代码中添加如下注释来忽略检测:
+
+* 忽略某个指定代码
+
+```
+// pecker:ignore 
+```
+
+例如:
+
+```swift
+// pecker:ignore
+class TestCommentObject { // skip
+    
+    // pecker:ignore
+    func test1() { // skip
+    }
+    
+    func test2() { // unused
+    }
+}
+
+```
+
+* 忽略所有的作用域下的代码  
+
+```
+// pecker:ignore all
+```
+
+For example:
+
+```swift
+// pecker:ignore all
+class TestCommentObject { // skip
+    
+    func test1() { // skip
+    }
+    
+    struct SubClass { // skip
+        
+        func test2() { // skip
+        }
+    }
+}
+
+```
 
 #### Other rules
 
@@ -148,7 +196,7 @@ extension UnusedExample {
 
 ### Configuration
 
-在`perker`项目中添加`.pecker.yml`，以下参数可以配置：
+这个是可选的，如果不配置讲使用默认的。在`perker`项目中添加`.pecker.yml`，以下参数可以配置：
 
 规则包含:
 

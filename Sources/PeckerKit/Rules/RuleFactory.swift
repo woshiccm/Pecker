@@ -24,6 +24,8 @@ struct RuleFactory {
             return AttributesRule()
         case .xml:
             return XMLRule()
+        case .comment:
+            return CommentRule()
         }
     }
 }
