@@ -26,6 +26,8 @@ struct RuleFactory {
             return XMLRule()
         case .comment:
             return CommentRule()
+        case .superClass:
+            return SuperClassRule()
         }
     }
 }

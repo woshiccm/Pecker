@@ -7,4 +7,5 @@ public enum RuleType: String, Decodable, CaseIterable {
     case attributes
     case xml
     case comment
+    case superClass = "super_class"
 }
