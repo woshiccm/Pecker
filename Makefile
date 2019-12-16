@@ -1,18 +1,33 @@
-usr_local ?= /usr/local
-
-bindir = $(usr_local)/bin
-libdir = $(usr_local)/lib
+PREFIX?=/usr/local
 
 build:
-	swift build -c release --disable-sandbox
+	swift build --disable-sandbox -c release
+
+clean_build:
+	rm -rf .build
+	make build
+
+portable_zip: build
+	rm -rf portable_pecker
+	mkdir portable_pecker
+	mkdir portable_pecker/bin
+	cp -f .build/release/pecker portable_pecker/bin/pecker
+	cp -f LICENSE portable_pecker
+	cd portable_pecker
+	(cd portable_pecker; zip -yr - "bin" "LICENSE") > "./portable_pecker.zip"
+	rm -rf portable_pecker
 
 install: build
-	install ".build/release/pecker" "$(bindir)"
+	mkdir -p "$(PREFIX)/bin"
+	cp -f ".build/release/pecker" "$(PREFIX)/bin/pecker"
 
-uninstall:
-	rm -rf "$(bindir)/pecker"
-	
-clean:
-	rm -rf .build
+get_version:
+	@cat .version
 
-.PHONY: build install uninstall clean
+publish:
+	brew update && brew bump-formula-pr --tag=$(shell git describe --tags) --revision=$(shell git rev-parse HEAD) pecker
+	COCOAPODS_VALIDATOR_SKIP_XCODEBUILD=1 pod trunk push Pecker.podspec
+
+%:
+
+	@:
