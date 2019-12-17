@@ -2,7 +2,7 @@
 
 `pecker` 是一个自动检测无用代码的工具，它基于 [IndexStoreDB](https://github.com/apple/indexstore-db.git) 和 [SwiftSyntax](https://github.com/apple/swift-syntax.git)。
 
-![屏幕快照 2019-12-03 下午4.25.38.png](https://upload-images.jianshu.io/upload_images/2086987-29c1e983fb5b604b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](assets/example.png)
 
 如果你有什么疑问可以随时联系我，我的推特 [Roy](https://twitter.com/Roy78463507)，邮箱: `roy.cao1991@gmail.com`。
 
@@ -25,6 +25,23 @@
 
 ## 安装
 
+### 使用 [CocoaPods](https://cocoapods.org):
+
+```sh
+pod 'Pecker'
+```
+
+在下一次执行 `pod install` 时将会把 SwiftLint 的二进制文件和依赖下载到 `Pods/` 目录下并且将允许你通过 {PODS_ROOT}/Pecker/bin/pecker` 在 Script Build Phases 中调用 Pecker。
+
+自从 Pecker 支持安装某个特定版本后，安装一个指定版本的 Pecker 是目前推荐的做法相比较于简单地选择最新版本安装的话。
+
+### 使用 [Mint](https://github.com/yonaskolb/mint):
+
+```
+mint install woshiccm/Pecker
+
+```
+
 ### 手动
 
 ```
@@ -33,22 +50,31 @@ $ cd Pecker
 $ make install
 ```
 
-### mint
-
-```
-mint install woshiccm/Pecker
-```
 
 之后`pecker`就被安装到你的`bin`目录下，现在你就可以使用它了。
 
-## 使用
+## 用法
 
 ### Xcode
 
-1. 打开你的项目，选择TARGETS，点击Build Phases，新建一个Run Script Phase。
-2. 放入以下脚本:
+整合 Pecker 到 Xcode 体系中去从而可以使警告和错误显示到 IDE 上，只需要在 Xcode 中添加一个新的“Run Script Phase”并且包含如下代码即可：
 
-  `/usr/local/bin/pecker`
+```bash
+if which pecker >/dev/null; then
+  pecker
+else
+  echo "warning: Pecker not installed, download from https://github.com/woshiccm/Pecker"
+fi
+```
+
+![](assets/runscript.png)
+
+
+或者，如果你已经通过 CocoaPods 安装了 Pecker，可以使用如下脚本：
+
+```bash
+${PODS_ROOT}/Pecker/bin/pecker
+```
   
 ### 命令行
 
@@ -206,7 +232,8 @@ extension UnusedExample {
 
 * xcode: 在Xcode中显示warning。
 * json: 生成名为`pecker.result.json`的文件，你可以通过`output_file`来自定义路径，如果没有指定，默认为当前检测项目的文件下的路径。
-  ![屏幕快照 2019-12-13 下午9.49.09.png](https://upload-images.jianshu.io/upload_images/2086987-29dbe4bb76af16ec.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+* 
+  ![](assets/json_result.png)
 
 ```yaml
 reporter: "xcode"

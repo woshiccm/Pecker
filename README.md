@@ -2,7 +2,8 @@
 
 `pecker` is a tool to automatically detect unused code. It based on [IndexStoreDB](https://github.com/apple/indexstore-db.git) and [SwiftSyntax](https://github.com/apple/swift-syntax.git).
 
-![屏幕快照 2019-12-03 下午4.25.38.png](https://upload-images.jianshu.io/upload_images/2086987-29c1e983fb5b604b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+![](assets/example.png)
 
 If you have questions, feel free to connect me, my Twitter [Roy](https://twitter.com/Roy78463507), Email: `roy.cao1991@gmail.com`. 
 
@@ -26,6 +27,26 @@ During the project development process, you may write a lot of code. Over time, 
 
 ## Installation
 
+### Using [CocoaPods](https://cocoapods.org):
+
+```sh
+pod 'Pecker'
+```
+
+This will download the Pecker binaries and dependencies in `Pods/` during your next
+`pod install` execution and will allow you to invoke it via `${PODS_ROOT}/Pecker/bin/pecker`
+in your Script Build Phases.
+
+This is the recommended way to install a specific version of Pecker since it supports installing a pinned version rather than simply the latest.
+
+
+### Using [Mint](https://github.com/yonaskolb/mint):
+
+```
+mint install woshiccm/Pecker
+
+```
+
 ### Manually
 
 ```
@@ -34,24 +55,31 @@ $ cd Pecker
 $ make install
 ```
 
-### mint
-
-```
-mint install woshiccm/Pecker
-
-```
-
 With that installed and on our `bin` folder, now we can use it.
 
 ## Usage
 
 ### Xcode
 
-1. Click on your project in the file list, choose your target under TARGETS, click the Build Phases tab and add a New Run Script Phase by clicking the little plus icon in the top left.
-2. Paste the following script:
+Integrate Pecker into an Xcode scheme to get warnings and errors displayed
+in the IDE. Just add a new "Run Script Phase" with:
 
-  `/usr/local/bin/pecker`
-  
+```bash
+if which pecker >/dev/null; then
+  pecker
+else
+  echo "warning: Pecker not installed, download from https://github.com/woshiccm/Pecker"
+fi
+```
+
+![](assets/runscript.png)
+
+Alternatively, if you've installed Pecker via CocoaPods the script should look like this:
+
+```bash
+${PODS_ROOT}/Pecker/bin/pecker
+```
+
   
 ### Command Line Usage
 
@@ -212,7 +240,8 @@ Reporter inclusion:
 * xcode: Warnings displayed in the IDE.
 * json: Generate a json file named `pecker.result.json`, you can set path by `output_file`, if unspecified, the default is current project directory path.
 
-   ![屏幕快照 2019-12-13 下午9.49.09.png](https://upload-images.jianshu.io/upload_images/2086987-29dbe4bb76af16ec.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+   
+   ![](assets/json_result.png)
 
 ```yaml
 reporter: "xcode"
