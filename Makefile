@@ -1,7 +1,7 @@
 PREFIX?=/usr/local
 
 build:
-	swift build --disable-sandbox -c release
+	swift build --disable-sandbox -c release --static-swift-stdlib
 
 clean_build:
 	rm -rf .build
@@ -25,9 +25,4 @@ get_version:
 	@cat .version
 
 publish:
-	brew update && brew bump-formula-pr --tag=$(shell git describe --tags) --revision=$(shell git rev-parse HEAD) pecker
 	COCOAPODS_VALIDATOR_SKIP_XCODEBUILD=1 pod trunk push Pecker.podspec
-
-%:
-
-	@:
