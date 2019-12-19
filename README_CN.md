@@ -25,6 +25,12 @@
 
 ## 安装
 
+### 使用 [Homebrew](http://brew.sh/)
+
+```sh
+$ brew install woshiccm/homebrew-tap/pecker
+```
+
 ### 使用 [CocoaPods](https://cocoapods.org):
 
 ```sh

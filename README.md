@@ -27,6 +27,12 @@ During the project development process, you may write a lot of code. Over time, 
 
 ## Installation
 
+### Using [Homebrew](http://brew.sh/)
+
+```sh
+$ brew install woshiccm/homebrew-tap/pecker
+```
+
 ### Using [CocoaPods](https://cocoapods.org):
 
 ```sh
