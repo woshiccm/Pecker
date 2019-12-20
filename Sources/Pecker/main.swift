@@ -25,15 +25,14 @@ fileprivate func main(_ arguments: [String]) -> Int32 {
     }
 }
 
-private func createConfiguration(options: CommandLineOptions) throws -> Configuration {
-    let processInfo = ProcessInfo()
-    /// Find the index path, default is   ~Library/Developer/Xcode/DerivedData/<target>/Index/DataStore
-    let buildRoot = try processInfo.environmentVariable(name: EnvironmentKeys.buildRoot)
-    
+private func createConfiguration(options: CommandLineOptions) throws -> Configuration {    
     let indexStorePath: AbsolutePath
     if let indexStorePathString = options.indexStorePath {
         indexStorePath = AbsolutePath(indexStorePathString)
     } else {
+        let processInfo = ProcessInfo()
+        // Find the index path, default is   ~Library/Developer/Xcode/DerivedData/<target>/Index/DataStore
+        let buildRoot = try processInfo.environmentVariable(name: EnvironmentKeys.buildRoot)
         let buildRootPath = AbsolutePath(buildRoot)
         indexStorePath = buildRootPath.parentDirectory.parentDirectory.appending(component: "Index/DataStore")
     }
