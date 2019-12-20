@@ -2,9 +2,12 @@ import Foundation
 
 struct RuleFactory {
     
+    static var yamlConfiguration: YamlConfiguration?
+    
     /// Filter disabledRules and create rule
     /// - Parameter disabledRules: The TuleTypes need to disable
-    static func make(_ disabledRules: [RuleType]?) -> [Rule] {
+    static func make() -> [Rule] {
+        let disabledRules = yamlConfiguration?.disabledRules
         let rules: [RuleType]
         if let disabledRules = disabledRules {
             rules = RuleType.allCases.filter{ !disabledRules.contains($0) }
@@ -27,7 +30,9 @@ struct RuleFactory {
         case .comment:
             return CommentRule()
         case .superClass:
-            return SuperClassRule()
+            var superClassRule = SuperClassRule()
+            superClassRule.blacklist = superClassRule.blacklist.union(Set(RuleFactory.yamlConfiguration?.blacklistSuperClass ?? []))
+            return superClassRule
         }
     }
 }

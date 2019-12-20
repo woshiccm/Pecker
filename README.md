@@ -108,6 +108,7 @@ This rule means skip detect public class, struct, function, etc. Usually the pub
 
 #### xctest
 XCTest is special, we stipulate that ignore classes inherited from XCTestCase and functions of this class that hasPrefix "test" and do not contain parameters. 
+
 ```swift
 class ExampleUITests: XCTestCase {
 
@@ -124,9 +125,11 @@ class ExampleUITests: XCTestCase {
 ```
 
 #### attributes
+
 If a Declaration contains the attribute in `BlackListAttribute`, skip. Such as `IBAction`, we are continuously collecting, if you find new cases, please let us know.
 
-```swift
+```swift  
+
 @IBAction func buttonTap(_ sender: Any) { // used
         
 }
@@ -268,6 +271,9 @@ blacklist_files: # files to ignore during detecting, only need to add file name,
 blacklist_symbols: # symbols to ignore during detecting, contains class, struct, enum, etc.
   - AppDelegate
   - viewDidLoad
+
+blacklist_superclass: # all the class inherit from class specified in the list will ignore
+    - UITableViewCell
 
 output_file: "/Users/ming/Desktop/PeckerResultDirectory"
 ```

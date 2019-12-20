@@ -20,6 +20,9 @@ public struct YamlConfiguration: Decodable {
     /// Acts as a blacklist, the  symbols specified in this list will ignore
     public let blacklistSymbols: [String]?
     
+    /// Acts as a blacklist, all the class inherit from class specified in the list will ignore
+    public let blacklistSuperClass: [String]?
+    
     /// The path of the output  json file
     public let outputFile: String?
     
@@ -30,6 +33,7 @@ public struct YamlConfiguration: Decodable {
         case excluded
         case blacklistFiles = "blacklist_files"
         case blacklistSymbols = "blacklist_symbols"
+        case blacklistSuperClass = "blacklist_superclass"
         case outputFile = "output_file"
     }
     
@@ -41,6 +45,7 @@ public struct YamlConfiguration: Decodable {
         self.excluded = try container.decodeIfPresent([String].self, forKey: .excluded)
         self.blacklistFiles = try container.decodeIfPresent([String].self, forKey: .blacklistFiles)
         self.blacklistSymbols = try container.decodeIfPresent([String].self, forKey: .blacklistSymbols)
+        self.blacklistSuperClass = try container.decodeIfPresent([String].self, forKey: .blacklistSuperClass)
         self.outputFile = try container.decodeIfPresent(String.self, forKey: .outputFile)
     }
 }
@@ -54,6 +59,7 @@ extension YamlConfiguration: Hashable {
         hasher.combine(excluded)
         hasher.combine(blacklistFiles)
         hasher.combine(blacklistSymbols)
+        hasher.combine(blacklistSuperClass)
         hasher.combine(outputFile)
     }
     
@@ -64,6 +70,7 @@ extension YamlConfiguration: Hashable {
             (lhs.excluded == rhs.excluded) &&
             (lhs.blacklistFiles == rhs.blacklistFiles) &&
             (lhs.blacklistSymbols == rhs.blacklistSymbols) &&
+            (lhs.blacklistSuperClass == rhs.blacklistSuperClass) &&
             (lhs.outputFile == rhs.outputFile)
     }
 }

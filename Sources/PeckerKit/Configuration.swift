@@ -64,7 +64,8 @@ public struct Configuration {
         }
         
         let reporter = ReporterFactory.make(yamlConfiguration?.reporter)
-        let rules = RuleFactory.make(yamlConfiguration?.disabledRules)
+        RuleFactory.yamlConfiguration = yamlConfiguration
+        let rules = RuleFactory.make()
         let outputFilePath = AbsolutePath(yamlConfiguration?.outputFile ?? projectPath.asURL.path).appending(component: "pecker.result.json")
         self.init(projectPath: projectPath,
                   indexStorePath: indexStorePath,

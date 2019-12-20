@@ -101,6 +101,7 @@ pecker [OPTIONS]
 这个规则规定忽略public的class，struct，function等. 通常public的代码是开放给他人用的，很难判定这些代码是否是无用的。所以默认不检测public的代码。但有些时候，比如使用`submodule`的方式组织代码，那么你又想检测public的代码，你只需要把它添加到` disabled_rules`中。
 
 #### xctest
+
 XCTest 很特别，我们规定忽略继承自XCTest的类，以及以"test"开头但没有参数的方法。
 
 ```swift
@@ -119,7 +120,9 @@ class ExampleUITests: XCTestCase {
 ```
 
 #### attributes
+
 如果一个声明的修饰符中包含`BlackListAttribute`中的case, 忽略这个检测。例如`IBAction`，我们在持续收集这些修饰符，如果你发现新的cases，请告诉我们。
+
 ```swift
 @IBAction func buttonTap(_ sender: Any) { // used
         
@@ -260,6 +263,9 @@ blacklist_files: # files to ignore during detecting, only need to add file name,
 blacklist_symbols: # symbols to ignore during detecting, contains class, struct, enum, etc.
   - AppDelegate
   - viewDidLoad
+
+blacklist_superclass: # all the class inherit from class specified in the list will ignore
+    - UITableViewCell
 
 output_file: "/Users/ming/Desktop/PeckerResultDirectory"
 ```
