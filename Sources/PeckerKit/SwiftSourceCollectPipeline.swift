@@ -14,74 +14,74 @@ class SwiftSourceCollectPipeline: SyntaxVisitor {
     }
     
     func visit(_ node: ClassDeclSyntax) -> SyntaxVisitorContinueKind {
-        if skip(syntax: node) {
-            return .visitChildren
-        }
         if let position = findLocaiton(syntax: node.identifier) {
+            if skip(syntax: node, location: position) {
+                return .visitChildren
+            }
             collect(SourceDetail(name: node.identifier.text, sourceKind: .class, location: position))
         }
         return .visitChildren
     }
     
     func visit(_ node: StructDeclSyntax) -> SyntaxVisitorContinueKind {
-        if skip(syntax: node) {
-            return .visitChildren
-        }
         if let position = findLocaiton(syntax: node.identifier) {
+            if skip(syntax: node, location: position) {
+                return .visitChildren
+            }
             collect(SourceDetail(name: node.identifier.text, sourceKind: .struct, location: position))
         }
         return .visitChildren
     }
     
     func visit(_ node: FunctionDeclSyntax) -> SyntaxVisitorContinueKind {
-        if skip(syntax: node) {
-            return .visitChildren
-        }
         let ps = node.signature.input.parameterList.compactMap {
             $0.firstName?.text
         }
         let function = Function(name: node.identifier.text, parameters: ps)
         if let position = findLocaiton(syntax: node.identifier) {
+            if skip(syntax: node, location: position) {
+                return .visitChildren
+            }
             collect(SourceDetail(name: function.description, sourceKind: .function, location: position))
         }
         return .visitChildren
     }
     
     func visit(_ node: EnumDeclSyntax) -> SyntaxVisitorContinueKind {
-        if skip(syntax: node) {
-            return .visitChildren
-        }
         if let position = findLocaiton(syntax: node.identifier) {
+            if skip(syntax: node, location: position) {
+                return .visitChildren
+            }
             collect(SourceDetail(name: node.identifier.text, sourceKind: .enum, location: position))
         }
         return .visitChildren
     }
     
     func visit(_ node: ProtocolDeclSyntax) -> SyntaxVisitorContinueKind {
-        if skip(syntax: node) {
-            return .visitChildren
-        }
         if let position = findLocaiton(syntax: node.identifier) {
+            if skip(syntax: node, location: position) {
+                return .visitChildren
+            }
             collect(SourceDetail(name: node.identifier.text, sourceKind: .protocol, location: position))
         }
         return .visitChildren
     }
     
     func visit(_ node: TypealiasDeclSyntax) -> SyntaxVisitorContinueKind {
-        if skip(syntax: node) {
-            return .visitChildren
-        }
         if let position = findLocaiton(syntax: node.identifier) {
+            if skip(syntax: node, location: position) {
+                return .visitChildren
+            }
             collect(SourceDetail(name: node.identifier.text, sourceKind: .typealias, location: position))
         }
         return .visitChildren
     }
     
     func visit(_ node: OperatorDeclSyntax) -> SyntaxVisitorContinueKind {
-        if skip(syntax: node) {
-            return .visitChildren
-        }
         if let position = findLocaiton(syntax: node.identifier) {
+            if skip(syntax: node, location: position) {
+                return .visitChildren
+            }
             collect(SourceDetail(name: node.identifier.text, sourceKind: .operator, location: position))
         }
         return .visitChildren
@@ -100,13 +100,13 @@ class SwiftSourceCollectPipeline: SyntaxVisitor {
 
 extension SwiftSourceCollectPipeline {
     
-    func skip(syntax: IdentifierSyntax) -> Bool {
+    func skip(syntax: IdentifierSyntax, location: SourceLocation) -> Bool {
         // Skip the symbol in blacklist
         if context.configuration.blacklistSymbols.contains(syntax.identifier.text) {
             return true
         }
         // Rules check
-        if rules.contains(where: { $0.skip(syntax) }) {
+        if rules.contains(where: { $0.skip(syntax, location: location) }) {
             return true
         }
         return false

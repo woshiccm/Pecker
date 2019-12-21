@@ -12,7 +12,7 @@ struct CommentRule: SourceCollectRule {
         static let all = "pecker:ignore all"
     }
     
-    func skip(_ node: Syntax) -> Bool {
+    func skip(_ node: Syntax, location: SourceLocation) -> Bool {
         guard let node = node as? ModifierSyntax else { return true }
         let comments = node.leadingTrivia?.compactMap({ $0.comment }) ?? []
         if comments.contains(where: { $0.contains(Comment.signal) }) || comments.contains(where: { $0.contains(Comment.all) })  {
@@ -25,26 +25,26 @@ struct CommentRule: SourceCollectRule {
             }
         }
         
-        if let classDel: StructDeclSyntax = node.searchParent() {
-            if containAllSkip(classDel) {
+        if let structDel: StructDeclSyntax = node.searchParent() {
+            if containAllSkip(structDel) {
                 return true
             }
         }
         
-        if let classDel: EnumDeclSyntax = node.searchParent() {
-            if containAllSkip(classDel) {
+        if let enumDel: EnumDeclSyntax = node.searchParent() {
+            if containAllSkip(enumDel) {
                 return true
             }
         }
         
-        if let classDel: ProtocolDeclSyntax = node.searchParent() {
-            if containAllSkip(classDel) {
+        if let protocolDel: ProtocolDeclSyntax = node.searchParent() {
+            if containAllSkip(protocolDel) {
                 return true
             }
         }
         
-        if let classDel: ExtensionDeclSyntax = node.searchParent() {
-            if containAllSkip(classDel) {
+        if let extensionDel: ExtensionDeclSyntax = node.searchParent() {
+            if containAllSkip(extensionDel) {
                 return true
             }
         }

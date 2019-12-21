@@ -8,7 +8,7 @@ struct AttributesRule: SourceCollectRule {
         case ibaction = "IBAction"
     }
     
-    func skip(_ node: Syntax) -> Bool {
+    func skip(_ node: Syntax, location: SourceLocation) -> Bool {
         if let funcDecl = node as? FunctionDeclSyntax {
             return skip(funcDecl)
         }
