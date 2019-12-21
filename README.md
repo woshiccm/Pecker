@@ -86,6 +86,29 @@ Alternatively, if you've installed Pecker via CocoaPods the script should look l
 ${PODS_ROOT}/Pecker/bin/pecker
 ```
 
+### Terminal
+
+>Note:  
+
+>1. In terminal, can't get project index path automatically, so you need to set index path through `-i/--index-store-path`
+>2. Need to set set report as `json` and set `output_file`, the path should be absolute path, if not specified `output_file`, the default is your project directory path.
+
+For example:
+
+`.pecker.yml` configuration:
+
+```
+reporter: "json"
+
+output_file: "/Users/ming/Desktop/PeckerResultDirectory"
+
+```
+
+terminal input
+
+```
+pecker /Users/ming/Desktop/Testttt -i /Users/ming/Library/Developer/Xcode/DerivedData/Testttt-aohluxvofrwtfagozexmpeifvryf/Index/DataStore
+```
   
 ### Command Line Usage
 
@@ -95,7 +118,7 @@ pecker [OPTIONS]
 ```
 
 * `-v/--version`: Prints the `pecker` version and exits.
-* `-i/--index-store-path`: The Index path of your project, if unspecified, the default is ~Library/Developer/Xcode/DerivedData/<target>/Index/DataStore.
+* `-i/--index-store-path`: The Index path of your project, if unspecified, the default is ~Library/Developer/Xcode/DerivedData/{your project}/Index/DataStore.
 
 Run `pecker` in the project target to detect. Project will be searched Swift files recursively.
 
@@ -247,7 +270,7 @@ Rule inclusion:
 Reporter inclusion: 
 
 * xcode: Warnings displayed in the IDE.
-* json: Generate a json file named `pecker.result.json`, you can set path by `output_file`, if unspecified, the default is current project directory path.
+* json: Generate a json file named `pecker.result.json`, you can set path by `output_file`, and the path should be absolute path, if unspecified, the default is current project directory path.
 
    
    ![](assets/json_result.png)

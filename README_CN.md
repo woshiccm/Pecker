@@ -81,6 +81,30 @@ fi
 ```bash
 ${PODS_ROOT}/Pecker/bin/pecker
 ```
+
+### 终端
+
+>注意:  
+
+>1. 在终端没办法自动获得index path，所以你需要通过`-i/--index-store-path`指定路径
+>2. 需要设置reporter为 `json`而且要设置 `output_file`，这个路径为绝对路径，如果不指定`output_file`，默认为你当前项目的路径.
+
+例子:
+
+`.pecker.yml` 配置:
+
+```
+reporter: "json"
+
+output_file: "/Users/ming/Desktop/PeckerResultDirectory"
+
+```
+
+终端输入
+
+```
+pecker /Users/ming/Desktop/Testttt -i /Users/ming/Library/Developer/Xcode/DerivedData/Testttt-aohluxvofrwtfagozexmpeifvryf/Index/DataStore
+```
   
 ### 命令行
 
@@ -90,7 +114,7 @@ pecker [OPTIONS]
 ```
 
 * `-v/--version`: 打印`pecker`版本.
-* `-i/--index-store-path`: 项目Index路径，如果没有指定，默认是~Library/Developer/Xcode/DerivedData/<target>/Index/DataStore。
+* `-i/--index-store-path`: 项目Index路径，如果没有指定，默认是~Library/Developer/Xcode/DerivedData/{your project}/Index/DataStore。
 
 在指定项目中执行 `pecker`，将会遍历检测所有的swift文件。
 
@@ -240,7 +264,7 @@ extension UnusedExample {
 报告方式包含: 
 
 * xcode: 在Xcode中显示warning。
-* json: 生成名为`pecker.result.json`的文件，你可以通过`output_file`来自定义路径，如果没有指定，默认为当前检测项目的文件下的路径。
+* json: 生成名为`pecker.result.json`的文件，你可以通过`output_file`来自定义路径，这个路径为绝对路径，如果没有指定，默认为当前检测项目的文件下的路径。
 * 
   ![](assets/json_result.png)
 
