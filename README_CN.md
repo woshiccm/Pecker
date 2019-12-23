@@ -1,5 +1,7 @@
 # Pecker
 
+>注意: 目前使用者可能遇到一些问题，比如 "dyld: Library not loaded: @rpath/lib_InternalSwiftSyntaxParser.dylib" 或者无法显示warning. 这是SwiftSyntax 问题, [SwiftSyntax with Swift 5.1](https://forums.swift.org/t/swiftsyntax-with-swift-5-1/29051), 请查看.
+
 `pecker` 是一个自动检测无用代码的工具，它基于 [IndexStoreDB](https://github.com/apple/indexstore-db.git) 和 [SwiftSyntax](https://github.com/apple/swift-syntax.git)。
 
 ![](assets/example.png)

@@ -1,5 +1,7 @@
 # Pecker
 
+>Note: Current same users may encounter some problems，such as "dyld: Library not loaded: @rpath/lib_InternalSwiftSyntaxParser.dylib" or not show warning. This is SwiftSyntax issue, [SwiftSyntax with Swift 5.1](https://forums.swift.org/t/swiftsyntax-with-swift-5-1/29051), pls check it.
+
 `pecker` is a tool to automatically detect unused code. It based on [IndexStoreDB](https://github.com/apple/indexstore-db.git) and [SwiftSyntax](https://github.com/apple/swift-syntax.git).
 
 
