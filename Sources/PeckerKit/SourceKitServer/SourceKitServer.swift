@@ -10,7 +10,7 @@ class SourceKitServer {
     }
     
     func findWorkspaceSymbols(matching: String) -> [SymbolOccurrence] {
-        var symbolOccurenceResults: [SymbolOccurrence] = []
+        var symbolOccurrenceResults: [SymbolOccurrence] = []
         workspace?.index?.forEachCanonicalSymbolOccurrence(
           containing: matching,
           anchorStart: true,
@@ -21,11 +21,11 @@ class SourceKitServer {
             if !symbol.location.isSystem &&
                 !symbol.roles.contains(.accessorOf) &&
                 symbol.roles.contains(.definition) {
-            symbolOccurenceResults.append(symbol)
+            symbolOccurrenceResults.append(symbol)
           }
           return true
         }
-        return symbolOccurenceResults
+        return symbolOccurrenceResults
     }
     
     func occurrences(ofUSR usr: String, roles: SymbolRole, workspace: Workspace) -> [SymbolOccurrence] {

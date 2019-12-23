@@ -3,7 +3,7 @@ import IndexStoreDB
 
 extension SymbolOccurrence {
     
-    /// Whether symbol is class, struct, enum, peotocol extensions
+    /// Whether symbol is class, struct, enum, protocol extensions
     /// - Parameter sources: All the source extensions
     func isSourceExtension(sources: inout [String: SourceDetail]) -> Bool {
         if sources[self.identifier] != nil {

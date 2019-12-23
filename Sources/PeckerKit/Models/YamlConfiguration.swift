@@ -8,10 +8,10 @@ public struct YamlConfiguration: Decodable {
     /// Output type
     public let reporter: ReporterType?
     
-    /// Paths to include during detecing
+    /// Paths to include during detecting
     public let included: [String]?
     
-    /// Paths to ignore during detecing
+    /// Paths to ignore during detecting
     public let excluded: [String]?
     
     /// Acts as a blacklist, the  Files specified in this list will ignore

@@ -20,7 +20,7 @@ struct XCTestRule: SourceCollectRule {
         return isInheritedFromXCTestCase(node) || fuzzyRule(location: location)
     }
     
-    /// If a UITest funciton hasPrefix "test" and has parameters, skip it
+    /// If a UITest function hasPrefix "test" and has parameters, skip it
     /// - Parameter node: FunctionDeclSyntax
     func skip(_ node: FunctionDeclSyntax, location: SourceLocation) -> Bool {
         if let classDecl: ClassDeclSyntax = node.searchParent(), isInheritedFromXCTestCase(classDecl) {
