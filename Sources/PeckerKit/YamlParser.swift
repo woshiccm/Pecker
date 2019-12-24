@@ -12,7 +12,7 @@ public struct YamlParser {
                              env: [String: String] = ProcessInfo.processInfo.environment) throws -> YamlConfiguration {
         do {
             let dict = try Yams.load(yaml: yaml, .default,
-                                     .peckerContructor(env: env)) as? [String: Any] ?? [:]
+                                     .peckerConstructor(env: env)) as? [String: Any] ?? [:]
             let data = try JSONSerialization.data(withJSONObject: dict, options: [])
             let decoder = JSONDecoder()
             return try decoder.decode(YamlConfiguration.self, from: data)
@@ -23,7 +23,7 @@ public struct YamlParser {
 }
 
 private extension Constructor {
-    static func peckerContructor(env: [String: String]) -> Constructor {
+    static func peckerConstructor(env: [String: String]) -> Constructor {
         return Constructor(customScalarMap(env: env))
     }
 

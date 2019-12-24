@@ -8,7 +8,7 @@ struct CommentRule: SourceCollectRule {
         /// If comment contains, skip
         static let signal = "pecker:ignore"
         
-        /// If comment contains, skip all in the scop
+        /// If comment contains, skip all in the scope
         static let all = "pecker:ignore all"
     }
     

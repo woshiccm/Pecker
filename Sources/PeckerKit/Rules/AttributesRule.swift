@@ -15,7 +15,7 @@ struct AttributesRule: SourceCollectRule {
         return false
     }
     
-    /// If a fucntion attributes contains the case in BlackListAttribute, skip.
+    /// If a function attributes contains the case in BlackListAttribute, skip.
     /// - Parameter node: FunctionDeclSyntax
     func skip(_ node: FunctionDeclSyntax) -> Bool {
         if let attributesArray = node.attributes?.lazy.compactMap({ $0.tokens.map{ $0.text} }) {

@@ -52,15 +52,15 @@ extension Analyzer {
     private func analyze(source: SourceDetail) -> Bool {
         let symbols = sourceKitserver.findWorkspaceSymbols(matching: source.name)
 
-        // If not find symobol of source, means source used.
+        // If not find symbol of source, means source used.
         guard let symbol = symbols.unique(of: source) else {
             return true
         }
 
         // Skip declarations that override another. This works for both subclass overrides &
         // protocol extension overrides.
-        let overrided = symbols.lazy.filter{ $0.symbol.usr != symbol.symbol.usr }.contains(where: { $0.isOverride(of: symbol) })
-        if overrided {
+        let overridden = symbols.lazy.filter{ $0.symbol.usr != symbol.symbol.usr }.contains(where: { $0.isOverride(of: symbol) })
+        if overridden {
             return true
         }
 
@@ -68,17 +68,17 @@ extension Analyzer {
             return true
         }
         
-        let symbolOccurenceResults = sourceKitserver.occurrences(
+        let symbolOccurrenceResults = sourceKitserver.occurrences(
             ofUSR: symbol.symbol.usr,
             roles: [.reference],
             workspace: workSpace)
         
-        // Skip extensions, the extension of class, struct, etc, don't means refenced.
-        if filterExtension(source: source, symbols: symbolOccurenceResults).count > 0 {
+        // Skip extensions, the extension of class, struct, etc, don't means referenced.
+        if filterExtension(source: source, symbols: symbolOccurrenceResults).count > 0 {
             return true
         }
         
-        // XMLRule anzlyze
+        // XMLRule analyze
         if let xmlRule = self.xmlRule, xmlRule.analyze(source) {
             return true
         }
@@ -87,8 +87,8 @@ extension Analyzer {
     }
     
     /// In the rule class, struct, enum and protocol extensions  are not mean  used,
-    /// But in symbol their extensions are defined as refered,
-    /// So we need to fitler their extensions.
+    /// But in symbol their extensions are defined as referred,
+    /// So we need to filter their extensions.
     /// - Parameters:
     ///   - source: The source code, determine if need filter by source kind.
     ///   - symbols: All the source symbols
