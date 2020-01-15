@@ -8,4 +8,5 @@ public enum RuleType: String, Decodable, CaseIterable {
     case xml
     case comment
     case superClass = "super_class"
+    case skipOptionaFunction = "skip_optional_function"
 }

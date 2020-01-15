@@ -33,6 +33,8 @@ struct RuleFactory {
             var superClassRule = SuperClassRule()
             superClassRule.blacklist = superClassRule.blacklist.union(Set(RuleFactory.yamlConfiguration?.blacklistSuperClass ?? []))
             return superClassRule
+        case .skipOptionaFunction:
+            return SkipOptionalFunctionRule()
         }
     }
 }
