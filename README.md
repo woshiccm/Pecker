@@ -262,7 +262,7 @@ extension UnusedExample {
 
 ### Configuration
 
-This is optinal, will use default, if unspecified. Configure `pecker` by adding a `.pecker.yml` file from the directory you'll
+This is optional, will use default, if unspecified. Configure `pecker` by adding a `.pecker.yml` file from the directory you'll
 run `pecker` from. The following parameters can be configured:
 
 Rule inclusion:
