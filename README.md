@@ -1,33 +1,31 @@
+>Notice: The "dyld: Library not loaded: @rpath/lib_InternalSwiftSyntaxParser.dylib" or missing warnings are caused by a SwiftSyntax issue, [SwiftSyntax with Swift 5.1](https://forums.swift.org/t/swiftsyntax-with-swift-5-1/29051).
+
 # Pecker
 
->Note: Current same users may encounter some problems，such as "dyld: Library not loaded: @rpath/lib_InternalSwiftSyntaxParser.dylib" or not show warning. This is SwiftSyntax issue, [SwiftSyntax with Swift 5.1](https://forums.swift.org/t/swiftsyntax-with-swift-5-1/29051), pls check it.
-
-`pecker` is a tool to automatically detect unused code. It based on [IndexStoreDB](https://github.com/apple/indexstore-db.git) and [SwiftSyntax](https://github.com/apple/swift-syntax.git).
-
+**Pecker** detects unused code. It's based on [IndexStoreDB](https://github.com/apple/indexstore-db.git) and [SwiftSyntax](https://github.com/apple/swift-syntax.git).
 
 ![](assets/example.png)
 
-If you have questions, feel free to connect me, my Twitter [Roy](https://twitter.com/Roy78463507), Email: `roy.cao1991@gmail.com`. 
+> Chinese Readme: [中文版readme](README_CN.md).
 
+## Motivation
 
-> Language Switch: [中文](README_CN.md).
-
-## Why use this?
-
-During the project development process, you may write a lot of code. Over time, a lot of code is no longer used, but it is difficult to find. `pecker` can help you locate these unused code conveniently and accurately.
+As your Swift project codebase grows, it is hard to locate unused code. You need to tell if some constructs are still in used. `pecker` does this job for you, easy and accurate.
 
 ## Features
-`pecker` can detect the following kinds of unused Swift code.
+`pecker` detects the following Swift constructs:
 
-1. class
-2. struct
-3. enum
-4. protocol
-5. function
-6. typealias
+1. `class`
+2. `struct`
+3. `enum`
+4. `protocol`
+5. `func`
+6. `typealias`
 7. operator
 
 ## Installation
+
+There're more than one way to install `pecker`.
 
 ### Using [Homebrew](http://brew.sh/)
 
@@ -41,12 +39,9 @@ $ brew install woshiccm/homebrew-tap/pecker
 pod 'Pecker'
 ```
 
-This will download the Pecker binaries and dependencies in `Pods/` during your next
-`pod install` execution and will allow you to invoke it via `${PODS_ROOT}/Pecker/bin/pecker`
-in your Script Build Phases.
+This will download the `pecker` binaries and dependencies in `Pods/` during your next run of `pod install` and will allow you to invoke it via `${PODS_ROOT}/Pecker/bin/pecker` in your script build phases.
 
-This is the recommended way to install a specific version of Pecker since it supports installing a pinned version rather than simply the latest.
-
+This is the recommended way to install a specific version of `pecker` since it supports installing a specific stable version rather than head version.
 
 ### Using [Mint](https://github.com/yonaskolb/mint):
 
@@ -55,7 +50,7 @@ mint install woshiccm/Pecker
 
 ```
 
-### Manually
+### Compiling from source
 
 ```
 $ git clone https://github.com/woshiccm/Pecker.git
@@ -63,14 +58,13 @@ $ cd Pecker
 $ make install
 ```
 
-With that installed and on our `bin` folder, now we can use it.
+With that installed and in the `bin` folder, now it's ready to serve.
 
 ## Usage
 
 ### Xcode
 
-Integrate Pecker into an Xcode scheme to get warnings and errors displayed
-in the IDE. Just add a new "Run Script Phase" with:
+Integrate `pecker` into an Xcode scheme to get warnings and errors displayed in the IDE. Just add a new "Run Script Phase" with:
 
 ```bash
 if which pecker >/dev/null; then
@@ -92,46 +86,43 @@ ${PODS_ROOT}/Pecker/bin/pecker
 
 >Note:  
 
->1. In terminal, can't get project index path automatically, so you need to set index path through `-i/--index-store-path`
->2. Need to set set report as `json` and set `output_file`, the path should be absolute path, if not specified `output_file`, the default is your project directory path.
+>1. In terminal, since project index path can't be retrieved automatically there, so you need to set index path through `-i/--index-store-path`
+>2. Need to set reporter as `json` and set `output_file`, the path should be absolute. If `output_file` is not specified, it defaults to your project directory path.
 
 For example:
 
-`.pecker.yml` configuration:
+In `.pecker.yml`, the configuration is:
 
 ```
 reporter: "json"
-
 output_file: "/Users/ming/Desktop/PeckerResultDirectory"
-
 ```
 
-terminal input
+In terminal, you input:
 
 ```
-pecker /Users/ming/Desktop/Testttt -i /Users/ming/Library/Developer/Xcode/DerivedData/Testttt-aohluxvofrwtfagozexmpeifvryf/Index/DataStore
+$ pecker /Users/ming/Desktop/Testttt -i /Users/ming/Library/Developer/Xcode/DerivedData/Testttt-aohluxvofrwtfagozexmpeifvryf/Index/DataStore
 ```
   
-### Command Line Usage
+### Command Line
 
 ```
 pecker [OPTIONS]
-
 ```
 
 * `-v/--version`: Prints the `pecker` version and exits.
 * `-i/--index-store-path`: The Index path of your project, if unspecified, the default is ~Library/Developer/Xcode/DerivedData/{your project}/Index/DataStore.
 
-Run `pecker` in the project target to detect. Project will be searched Swift files recursively.
+Run `pecker` in the project target to detect. Project will search Swift files recursively.
 
-### Rules
+## Rules
 
 Current only 5 rules are included in Pecker, They are `skip_public`, `xctest`, `attributes`, `xml`, `comment`. You can add them to ` disabled_rules` if you don't need it. You can also check Source/PeckerKit/Rules directory to see their implementation.
 
-#### skip_public
+### skip_public
 This rule means skip detect public class, struct, function, etc. Usually the public code is provided for other users, so it is difficult to determine whether it is used. So we don't detect it by default. But in some cases, such as using `submodule` to organize code, you need to detect public code, you can add it to ` disabled_rules`.
 
-#### xctest
+### xctest
 XCTest is special, we stipulate that ignore classes inherited from XCTestCase and functions of this class that hasPrefix "test" and do not contain parameters. 
 
 ```swift
@@ -149,23 +140,22 @@ class ExampleUITests: XCTestCase {
 
 ```
 
-#### attributes
+### attributes
 
 If a Declaration contains the attribute in `BlackListAttribute`, skip. Such as `IBAction`, we are continuously collecting, if you find new cases, please let us know.
 
 ```swift  
-
-@IBAction func buttonTap(_ sender: Any) { // used
-        
+@IBAction func buttonTap(_ sender: Any) { // used       
 }
-
 ```
 
-#### xml
-If code is used in xib or storyboard, it also means used.
+### XML
+
+If code is being used in .xib or storyboard, we say it's in use.
 
 #### comment  
-Code can be ignore with a comment inside a source file with the following format:
+
+Code can be ignored with a comment inside a source file with the following format:
 
 * Ignore specified code
 
@@ -186,7 +176,6 @@ class TestCommentObject { // skip
     func test2() { // unused
     }
 }
-
 ```
 
 * Ignore all symbols under scope   
@@ -312,8 +301,7 @@ Any contributing and pull requests are warmly welcome. If you are interested in 
 
 ## Contributors
 
+* Roy Cao ([@Roy78463507](https://twitter.com/Roy78463507), [email](mailto:roy.cao1991@gmail.com))
+
 ## Licence
 `pecker` is released under the [MIT License](https://opensource.org/licenses/MIT).
-
-
-
