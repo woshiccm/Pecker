@@ -22,6 +22,7 @@ public final class Analyzer {
         sourceKitserver = SourceKitServer(workspace: workSpace)
         
         let xmlRules = configuration.rules.lazy.compactMap{ $0 as? XMLRule }
+        
         if let xmlRule = xmlRules.first {
             let xmlServer = XMLServer(rootPath: configuration.projectPath,
                                       configuration: configuration)
@@ -33,15 +34,18 @@ public final class Analyzer {
     }
     
     public func analyze() throws -> [SourceDetail] {
-        var deadSources: [SourceDetail] = []
-        try sourceCodeCollector.collect()
-        
-        for source in sourceCodeCollector.sources {
-            if !analyze(source: source) {
-                deadSources.append(source)
+        let deadSources = ThreadSafe<[SourceDetail]>([])
+        sourceCodeCollector.collect()
+
+        DispatchQueue.concurrentPerform(iterations: sourceCodeCollector.sources.count) { (index) in
+            if !analyze(source: sourceCodeCollector.sources[index]) {
+                deadSources.atomically {
+                    $0.append(sourceCodeCollector.sources[index])
+                }
             }
         }
-        return deadSources
+
+        return deadSources.value
     }
 }
 
@@ -96,6 +100,6 @@ extension Analyzer {
         guard source.needFilterExtension else {
             return symbols
         }
-        return symbols.lazy.filter { !$0.isSourceExtension(sources: &sourceCodeCollector.sourceExtensions) }
+        return symbols.lazy.filter { !$0.isSourceExtension(safeSources: sourceCodeCollector.sourceExtensions) }
     }
 }

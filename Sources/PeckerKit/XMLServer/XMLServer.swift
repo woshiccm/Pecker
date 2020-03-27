@@ -4,7 +4,7 @@ import TSCBasic
 class XMLServer {
     
     private let targetPath: AbsolutePath
-    private let excluded: [AbsolutePath]
+    private let excluded: Set<AbsolutePath>
     private let included: [AbsolutePath]
     /// The file system to operate on.
     private let fs: FileSystem
@@ -13,7 +13,7 @@ class XMLServer {
     
     init(rootPath: AbsolutePath, configuration: Configuration) {
         self.targetPath = rootPath
-        self.excluded = configuration.excluded
+        self.excluded = Set(configuration.excluded)
         self.included = configuration.included
         self.fs = localFileSystem
     }
@@ -39,12 +39,17 @@ class XMLServer {
             // Ignore if this is an excluded path.
             if self.excluded.contains(curr) { continue }
             
-            // Append and continue if the path doesn't have an extension or is not a directory.
-            if (curr.extension == "xib" || curr.extension == "storyboard" ) && !fs.isDirectory(curr) {
+            // Append and continue if the path has an extension
+            if (curr.extension == "xib" || curr.extension == "storyboard" ) {
                 contents.append(curr)
                 continue
             }
-            
+
+            // If not directory continue
+            guard fs.isDirectory(curr) else {
+                continue
+            }
+
             do {
                 // Add directory content to the queue.
                 let dirContents = try fs.getDirectoryContents(curr).map{ curr.appending(component: $0) }

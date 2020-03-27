@@ -3,7 +3,7 @@ import IndexStoreDB
 
 class SourceKitServer {
     
-    var workspace: Workspace?
+    let workspace: Workspace?
     
     init(workspace: Workspace? = nil) {
         self.workspace = workspace
