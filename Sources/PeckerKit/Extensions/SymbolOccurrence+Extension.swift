@@ -5,12 +5,12 @@ extension SymbolOccurrence {
     
     /// Whether symbol is class, struct, enum, protocol extensions
     /// - Parameter sources: All the source extensions
-    func isSourceExtension(sources: inout [String: SourceDetail]) -> Bool {
-        if sources[self.identifier] != nil {
-            sources[self.identifier] = nil
-            return true
+    func isSourceExtension(safeSources: SafeSourceExtensions) -> Bool {
+        guard safeSources.value[self.identifier] != nil else {
+            return false
         }
-        return false
+        safeSources.atomically { $0[self.identifier] = nil }
+        return true
     }
 }
 
