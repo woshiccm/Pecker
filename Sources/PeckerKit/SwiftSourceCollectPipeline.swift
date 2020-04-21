@@ -13,7 +13,7 @@ class SwiftSourceCollectPipeline: SyntaxVisitor {
         self.rules = context.configuration.rules.compactMap { $0 as? SourceCollectRule }
     }
     
-    func visit(_ node: ClassDeclSyntax) -> SyntaxVisitorContinueKind {
+    override func visit(_ node: ClassDeclSyntax) -> SyntaxVisitorContinueKind {
         if let position = findLocation(syntax: node.identifier) {
             if skip(syntax: node, location: position) {
                 return .visitChildren
@@ -23,7 +23,7 @@ class SwiftSourceCollectPipeline: SyntaxVisitor {
         return .visitChildren
     }
     
-    func visit(_ node: StructDeclSyntax) -> SyntaxVisitorContinueKind {
+    override func visit(_ node: StructDeclSyntax) -> SyntaxVisitorContinueKind {
         if let position = findLocation(syntax: node.identifier) {
             if skip(syntax: node, location: position) {
                 return .visitChildren
@@ -33,7 +33,7 @@ class SwiftSourceCollectPipeline: SyntaxVisitor {
         return .visitChildren
     }
     
-    func visit(_ node: FunctionDeclSyntax) -> SyntaxVisitorContinueKind {
+    override func visit(_ node: FunctionDeclSyntax) -> SyntaxVisitorContinueKind {
         let ps = node.signature.input.parameterList.compactMap {
             $0.firstName?.text
         }
@@ -47,7 +47,7 @@ class SwiftSourceCollectPipeline: SyntaxVisitor {
         return .visitChildren
     }
     
-    func visit(_ node: EnumDeclSyntax) -> SyntaxVisitorContinueKind {
+    override func visit(_ node: EnumDeclSyntax) -> SyntaxVisitorContinueKind {
         if let position = findLocation(syntax: node.identifier) {
             if skip(syntax: node, location: position) {
                 return .visitChildren
@@ -57,7 +57,7 @@ class SwiftSourceCollectPipeline: SyntaxVisitor {
         return .visitChildren
     }
     
-    func visit(_ node: ProtocolDeclSyntax) -> SyntaxVisitorContinueKind {
+    override func visit(_ node: ProtocolDeclSyntax) -> SyntaxVisitorContinueKind {
         if let position = findLocation(syntax: node.identifier) {
             if skip(syntax: node, location: position) {
                 return .visitChildren
@@ -67,7 +67,7 @@ class SwiftSourceCollectPipeline: SyntaxVisitor {
         return .visitChildren
     }
     
-    func visit(_ node: TypealiasDeclSyntax) -> SyntaxVisitorContinueKind {
+    override func visit(_ node: TypealiasDeclSyntax) -> SyntaxVisitorContinueKind {
         if let position = findLocation(syntax: node.identifier) {
             if skip(syntax: node, location: position) {
                 return .visitChildren
@@ -77,7 +77,7 @@ class SwiftSourceCollectPipeline: SyntaxVisitor {
         return .visitChildren
     }
     
-    func visit(_ node: OperatorDeclSyntax) -> SyntaxVisitorContinueKind {
+    override func visit(_ node: OperatorDeclSyntax) -> SyntaxVisitorContinueKind {
         if let position = findLocation(syntax: node.identifier) {
             if skip(syntax: node, location: position) {
                 return .visitChildren
@@ -87,7 +87,7 @@ class SwiftSourceCollectPipeline: SyntaxVisitor {
         return .visitChildren
     }
     
-    func visit(_ node: ExtensionDeclSyntax) -> SyntaxVisitorContinueKind {
+    override func visit(_ node: ExtensionDeclSyntax) -> SyntaxVisitorContinueKind {
         for token in node.extendedType.tokens {
             if let position = findLocation(syntax: token) {
                 let source = SourceDetail(name: token.text , sourceKind: .extension, location: position)
@@ -118,7 +118,7 @@ extension SwiftSourceCollectPipeline {
         }
     }
     
-    func findLocation(syntax: Syntax) -> SourceLocation? {
+    func findLocation(syntax: SyntaxProtocol) -> SourceLocation? {
         let position = context.sourceLocationConverter.location(for: syntax.positionAfterSkippingLeadingTrivia)
         guard let line = position.line,
             let column = position.column else {

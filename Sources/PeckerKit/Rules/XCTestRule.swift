@@ -4,7 +4,7 @@ import SwiftSyntax
 /// The rules for UITest and UnitTests
 struct XCTestRule: SourceCollectRule {
     
-    func skip(_ node: Syntax, location: SourceLocation) -> Bool {
+    func skip(_ node: SyntaxProtocol, location: SourceLocation) -> Bool {
         if let clsDecl = node as? ClassDeclSyntax {
             return skip(clsDecl, location: location)
         }
