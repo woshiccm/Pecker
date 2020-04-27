@@ -12,7 +12,7 @@ struct CommentRule: SourceCollectRule {
         static let all = "pecker:ignore all"
     }
     
-    func skip(_ node: Syntax, location: SourceLocation) -> Bool {
+    func skip(_ node: SyntaxProtocol, location: SourceLocation) -> Bool {
         guard let node = node as? ModifierSyntax else { return true }
         let comments = node.leadingTrivia?.compactMap({ $0.comment }) ?? []
         if comments.contains(where: { $0.contains(Comment.signal) }) || comments.contains(where: { $0.contains(Comment.all) })  {
@@ -52,7 +52,7 @@ struct CommentRule: SourceCollectRule {
         return false
     }
     
-    private func containAllSkip(_ node: Syntax) -> Bool {
+    private func containAllSkip(_ node: SyntaxProtocol) -> Bool {
         let comments = node.leadingTrivia?.compactMap({ $0.comment }) ?? []
         if comments.contains(where: { $0.contains(Comment.all) }) {
             return true

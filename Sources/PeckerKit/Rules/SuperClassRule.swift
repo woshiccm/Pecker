@@ -7,7 +7,7 @@ struct SuperClassRule: SourceCollectRule {
     var blacklist: Set<String> = ["NotificationService",
                                   "PreviewProvider"]
     
-    func skip(_ node: Syntax, location: SourceLocation) -> Bool {
+    func skip(_ node: SyntaxProtocol, location: SourceLocation) -> Bool {
         if let node = node as? InheritableSyntax {
             if blacklist.contains(where: node.isInherited(from:)) {
                 return true

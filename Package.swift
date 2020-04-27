@@ -9,8 +9,8 @@ let package = Package(
         .executable(name: "pecker", targets: ["Pecker"])
     ],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-syntax.git", .exact("0.50100.0")),
-        .package(url: "https://github.com/apple/indexstore-db.git", .branch("swift-5.1-branch")),
+        .package(url: "https://github.com/apple/swift-syntax.git", .exact("0.50200.0")),
+        .package(url: "https://github.com/apple/indexstore-db.git", .branch("swift-5.2-branch")),
         .package(url: "https://github.com/apple/swift-tools-support-core.git", .branch("master")),
         .package(url: "https://github.com/jpsim/Yams.git", from: "2.0.0"),
     ],

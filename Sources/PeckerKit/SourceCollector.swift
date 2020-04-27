@@ -39,8 +39,8 @@ class SourceCollector {
             let context = CollectContext(configuration: configuration,
                                          filePath: files[index].description,
                                          sourceFileSyntax: syntax)
-            var pipeline = SwiftSourceCollectPipeline(context: context)
-            syntax.walk(&pipeline)
+            let pipeline = SwiftSourceCollectPipeline(context: context)
+            pipeline.walk(syntax)
             safeSources.atomically { $0 += pipeline.sources }
             sourceExtensions.atomically { $0 += pipeline.sourceExtensions }
         }

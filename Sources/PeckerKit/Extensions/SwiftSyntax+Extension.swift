@@ -17,14 +17,14 @@ extension StructDeclSyntax: InheritableSyntax {}
 extension EnumDeclSyntax: InheritableSyntax {}
 extension ProtocolDeclSyntax: InheritableSyntax {}
 
-protocol ModifierSyntax: Syntax {
+protocol ModifierSyntax: SyntaxProtocol {
     var modifiers: ModifierListSyntax? { get }
     func isPublic() -> Bool
 }
 
 extension ModifierSyntax {
     func searchParent<T: ModifierSyntax>() -> T? {
-        var currentParent: Syntax? = parent
+        var currentParent: SyntaxProtocol? = parent
         
         while currentParent != nil {
           if let decl = currentParent as? T {
@@ -72,7 +72,7 @@ extension OperatorDeclSyntax: ModifierSyntax {}
 extension ExtensionDeclSyntax: ModifierSyntax {}
 
 
-protocol IdentifierSyntax: Syntax {
+protocol IdentifierSyntax: SyntaxProtocol {
     var identifier: TokenSyntax { get }
 }
 
@@ -94,7 +94,7 @@ extension TriviaPiece {
              .newlines,
              .carriageReturns,
              .carriageReturnLineFeeds,
-             .backticks,
+//             .backticks,
              .garbageText:
             return nil
         case .lineComment(let comment),
