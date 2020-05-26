@@ -13,6 +13,7 @@ let package = Package(
         .package(url: "https://github.com/apple/indexstore-db.git", .branch("swift-5.2-branch")),
         .package(url: "https://github.com/apple/swift-tools-support-core.git", .branch("master")),
         .package(url: "https://github.com/jpsim/Yams.git", from: "2.0.0"),
+        .package(url: "https://github.com/apple/swift-argument-parser.git", .branch("master")),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -21,7 +22,8 @@ let package = Package(
             name: "Pecker",
             dependencies: [
                 "PeckerKit",
-                "SwiftToolsSupport-auto"]
+                "SwiftToolsSupport-auto",
+                .product(name: "ArgumentParser", package: "swift-argument-parser")]
         ),
         .target(
             name: "PeckerKit",
