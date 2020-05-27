@@ -25,7 +25,7 @@ struct CommandLineOptions: ParsableArguments {
     mutating func validate() throws {
         if version {
             // TODO: Use a real version number here.
-            print("0.3.")
+            print("0.3.0")
             throw ExitCode.success
         }
     }
