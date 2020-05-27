@@ -39,7 +39,7 @@ $ brew install woshiccm/homebrew-tap/pecker
 pod 'Pecker'
 ```
 
-在下一次执行 `pod install` 时将会把 SwiftLint 的二进制文件和依赖下载到 `Pods/` 目录下并且将允许你通过 {PODS_ROOT}/Pecker/bin/pecker` 在 Script Build Phases 中调用 Pecker。
+在下一次执行 `pod install` 时将会把 pecker 的二进制文件和依赖下载到 `Pods/` 目录下并且将允许你通过 {PODS_ROOT}/Pecker/bin/pecker` 在 Script Build Phases 中调用 pecker。
 
 自从 Pecker 支持安装某个特定版本后，安装一个指定版本的 Pecker 是目前推荐的做法相比较于简单地选择最新版本安装的话。
 
@@ -89,7 +89,7 @@ ${PODS_ROOT}/Pecker/bin/pecker
 >注意:  
 
 >1. 在终端没办法自动获得index path，所以你需要通过`-i/--index-store-path`指定路径
->2. 需要设置reporter为 `json`而且要设置 `output_file`，这个路径为绝对路径，如果不指定`output_file`，默认为你当前项目的路径.
+>2. 需要设置reporter为 `json`而且要设置 `output_file`，这个路径可以使相对路径和绝对路径，如果不指定`output_file`，默认为你当前项目下的`pecker.result.json`.
 
 例子:
 
@@ -98,7 +98,7 @@ ${PODS_ROOT}/Pecker/bin/pecker
 ```
 reporter: "json"
 
-output_file: "/Users/ming/Desktop/PeckerResultDirectory"
+output_file: pecker.result.json
 
 ```
 
@@ -116,6 +116,7 @@ pecker [OPTIONS]
 ```
 
 * `-v/--version`: 打印`pecker`版本.
+* `--config`: 自定义yaml 配置文件路径.
 * `-i/--index-store-path`: 项目Index路径，如果没有指定，默认是~Library/Developer/Xcode/DerivedData/{your project}/Index/DataStore。
 
 在指定项目中执行 `pecker`，将会遍历检测所有的swift文件。
@@ -257,16 +258,16 @@ extension UnusedExample {
 
 ### Configuration
 
-这个是可选的，如果不配置讲使用默认的。在`perker`项目中添加`.pecker.yml`，以下参数可以配置：
+这个是可选的，如果不配置将使用默认的。在`perker`项目中添加`.pecker.yml`，以下参数可以配置：
 
 规则包含:
 
-* `disabled_rules`: 从默认启用集中禁用规则。
+* `disabled_rules`: 从默认启用中禁用规则。
 
 报告方式包含: 
 
 * xcode: 在Xcode中显示warning。
-* json: 生成名为`pecker.result.json`的文件，你可以通过`output_file`来自定义路径，这个路径为绝对路径，如果没有指定，默认为当前检测项目的文件下的路径。
+* json: 生成名为`pecker.result.json`的文件，你可以通过`output_file`来自定义路径，这个路径可以为相对路劲和绝对路径，如果没有指定，默认为当前检测项目的文件下`pecker.result.json`。
 * 
   ![](assets/json_result.png)
 
@@ -283,6 +284,9 @@ excluded: # paths to ignore during detecting. Takes precedence over `included`.
   - Carthage
   - Pods
 
+excludedGroupName: # names of group to ignore during detecting.
+  - SwiftPeckerTestUITests
+
 blacklist_files: # files to ignore during detecting, only need to add file name, the file extension default is swift.
   - HomeViewController
 
@@ -291,9 +295,11 @@ blacklist_symbols: # symbols to ignore during detecting, contains class, struct,
   - viewDidLoad
 
 blacklist_superclass: # all the class inherit from class specified in the list will ignore
-    - UITableViewCell
+  - UITableViewCell
 
-output_file: "/Users/ming/Desktop/PeckerResultDirectory"
+# If output_file is not specified, the defaults to be pecker.result.json in your project
+
+output_file: pecker.result.jsonthe path can be both relative and absolute.
 ```
 
   
@@ -303,7 +309,6 @@ output_file: "/Users/ming/Desktop/PeckerResultDirectory"
 
 任何的贡献和pull requests都很受欢迎。如果你对开发`pecker`很感兴趣，提交你的想法和pull requests!
 
-## 贡献者
 
 ## 协议
 [MIT License](https://opensource.org/licenses/MIT)许可。

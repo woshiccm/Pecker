@@ -21,7 +21,7 @@ As your Swift project codebase grows, it is hard to locate unused code. You need
 4. `protocol`
 5. `func`
 6. `typealias`
-7. operator
+7. `operator`
 
 ## Installation
 
@@ -87,7 +87,7 @@ ${PODS_ROOT}/Pecker/bin/pecker
 >Note:  
 
 >1. In terminal, since project index path can't be retrieved automatically there, so you need to set index path through `-i/--index-store-path`
->2. Need to set reporter as `json` and set `output_file`, the path should be absolute. If `output_file` is not specified, it defaults to your project directory path.
+>2. Need to set reporter as `json` and set `output_file`, the path can be both relative and absolute. If output_file is not specified, it defaults to be `pecker.result.json` in your project.
 
 For example:
 
@@ -95,7 +95,7 @@ In `.pecker.yml`, the configuration is:
 
 ```
 reporter: "json"
-output_file: "/Users/ming/Desktop/PeckerResultDirectory"
+output_file: pecker.result.json
 ```
 
 In terminal, you input:
@@ -111,6 +111,7 @@ pecker [OPTIONS]
 ```
 
 * `-v/--version`: Prints the `pecker` version and exits.
+* `--config`: The custom path for configuration yaml file.
 * `-i/--index-store-path`: The Index path of your project, if unspecified, the default is ~Library/Developer/Xcode/DerivedData/{your project}/Index/DataStore.
 
 Run `pecker` in the project target to detect. Project will search Swift files recursively.
@@ -261,7 +262,7 @@ Rule inclusion:
 Reporter inclusion: 
 
 * xcode: Warnings displayed in the IDE.
-* json: Generate a json file named `pecker.result.json`, you can set path by `output_file`, and the path should be absolute path, if unspecified, the default is current project directory path.
+* json: you can set path by `output_file`, and the path can be both  relative and absolute path, if unspecified, the default is `pecker.result.json` in current project directory.
 
    
    ![](assets/json_result.png)
@@ -279,6 +280,9 @@ excluded: # paths to ignore during detecting. Takes precedence over `included`.
   - Carthage
   - Pods
 
+excludedGroupName: # names of group to ignore during detecting.
+  - SwiftPeckerTestUITests
+
 blacklist_files: # files to ignore during detecting, only need to add file name, the file extension default is swift.
   - HomeViewController
 
@@ -287,9 +291,11 @@ blacklist_symbols: # symbols to ignore during detecting, contains class, struct,
   - viewDidLoad
 
 blacklist_superclass: # all the class inherit from class specified in the list will ignore
-    - UITableViewCell
+  - UITableViewCell
 
-output_file: "/Users/ming/Desktop/PeckerResultDirectory"
+# If output_file is not specified, the defaults to be pecker.result.json in your project
+
+output_file: pecker.result.jsonthe path can be both relative and absolute.
 ```
 
   
@@ -299,9 +305,6 @@ output_file: "/Users/ming/Desktop/PeckerResultDirectory"
 
 Any contributing and pull requests are warmly welcome. If you are interested in developing `pecker`, submit ideas and submit pull requests!
 
-## Contributors
-
-* Roy Cao ([@Roy78463507](https://twitter.com/Roy78463507), [email](mailto:roy.cao1991@gmail.com))
 
 ## Licence
 `pecker` is released under the [MIT License](https://opensource.org/licenses/MIT).

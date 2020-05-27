@@ -12,7 +12,7 @@ struct CommandLineOptions: ParsableArguments {
     /// The path to the index that should be loaded
     ///
     /// If not specified, the default is find from DerivedData with project name
-    @Option(help: "Specify project index path [default: ~/Library/Developer/Xcode/DerivedData]")
+    @Option(name: .shortAndLong, help: "Specify project index path [default: ~/Library/Developer/Xcode/DerivedData]")
     var indexStorePath: String?
     
     /// The configuration file path
