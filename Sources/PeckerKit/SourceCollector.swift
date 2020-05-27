@@ -14,6 +14,7 @@ class SourceCollector {
     private let targetPath: AbsolutePath
     private let excluded: Set<AbsolutePath>
     private let included: Set<AbsolutePath>
+    private let excludedGroupName: Set<String>
     private let blacklistFiles: Set<String>
     /// The file system to operate on.
     private let fs: FileSystem
@@ -23,6 +24,7 @@ class SourceCollector {
         self.configuration = configuration
         self.excluded = Set(configuration.excluded)
         self.included = Set(configuration.included)
+        self.excludedGroupName = Set(configuration.excludedGroupName)
         self.blacklistFiles = Set(configuration.blacklistFiles)
         self.fs = localFileSystem
     }
@@ -39,7 +41,7 @@ class SourceCollector {
             let context = CollectContext(configuration: configuration,
                                          filePath: files[index].description,
                                          sourceFileSyntax: syntax)
-            let pipeline = SwiftSourceCollectPipeline(context: context)
+            let pipeline = SwiftSourceCollectVisitor(context: context)
             pipeline.walk(syntax)
             safeSources.atomically { $0 += pipeline.sources }
             sourceExtensions.atomically { $0 += pipeline.sourceExtensions }
@@ -59,13 +61,19 @@ class SourceCollector {
             // Ignore if this is an excluded path.
             if self.excluded.contains(curr) { continue }
             
+            // Ignore if this is an not included path.
+            guard self.included.contains(where: { $0.contains(curr) || curr.contains($0) }) else {
+                continue
+            }
+            
             // Append and continue if the path doesn't have an extension or is not a directory and is not in lacklistFiles.
             if curr.extension == "swift" && !blacklistFiles.contains(curr.basenameWithoutExt) {
                 contents.append(curr)
                 continue
             }
+            
             // If not directory continue
-            guard fs.isDirectory(curr) else {
+            guard fs.isDirectory(curr) && !self.excludedGroupName.contains(curr.basenameWithoutExt) else {
                 continue
             }
 
