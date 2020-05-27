@@ -14,6 +14,8 @@ public struct Configuration {
     
     public let excluded: [AbsolutePath]
     
+    public let excludedGroupName: [String]
+    
     public let blacklistFiles: [String]
     
     public let blacklistSymbols: [String]
@@ -31,31 +33,31 @@ public struct Configuration {
     
     internal init(projectPath: AbsolutePath,
                   indexStorePath: String,
-                  indexDatabasePath: String? = nil,
                   rules: [Rule],
                   reporter: Reporter,
                   included: [AbsolutePath],
                   excluded: [AbsolutePath],
+                  excludedGroupName: [String],
                   blacklistFiles: [String],
                   blacklistSymbols: [String],
                   outputFile: AbsolutePath) {
         self.projectPath = projectPath
         self.indexStorePath = indexStorePath
-        self.indexDatabasePath = indexDatabasePath ?? NSTemporaryDirectory() + "index_\(getpid())"
+        self.indexDatabasePath = NSTemporaryDirectory() + "index_\(getpid())"
         self.rules = rules
         self.reporter = reporter
         self.included = included
         self.excluded = excluded
+        self.excludedGroupName = excludedGroupName
         self.blacklistFiles = blacklistFiles
         self.blacklistSymbols = blacklistSymbols
         self.outputFile = outputFile
     }
     
-    public init(projectPath: AbsolutePath, indexStorePath: String = "", indexDatabasePath: String? = nil) {
-        let fullPath = projectPath.appending(RelativePath(Configuration.fileName)).asURL.path
+    public init(projectPath: AbsolutePath, indexStorePath: String = "", configPath: AbsolutePath) {
         var yamlConfiguration: YamlConfiguration?
         do {
-            let yamlContents = try String(contentsOfFile: fullPath, encoding: .utf8)
+            let yamlContents = try String(contentsOfFile: configPath.asURL.path, encoding: .utf8)
             yamlConfiguration = try YamlParser.parse(yamlContents)
         } catch YamlParserError.yamlParsing(let message) {
             log(message)
@@ -66,16 +68,45 @@ public struct Configuration {
         let reporter = ReporterFactory.make(yamlConfiguration?.reporter)
         RuleFactory.yamlConfiguration = yamlConfiguration
         let rules = RuleFactory.make()
-        let outputFilePath = AbsolutePath(yamlConfiguration?.outputFile ?? projectPath.asURL.path).appending(component: "pecker.result.json")
+        let outputFilePath = createOutputFilePath(projectPath: projectPath, outputFile: yamlConfiguration?.outputFile)
+        
+        let included = (yamlConfiguration?.included ?? [""]).map {
+            return AbsolutePath($0, relativeTo: projectPath)
+        }.filter { localFileSystem.exists($0) }
+        
+        let excluded = (yamlConfiguration?.excluded ?? []).map {
+            return AbsolutePath($0, relativeTo: projectPath)
+        }.filter { localFileSystem.exists($0) }
+        
         self.init(projectPath: projectPath,
                   indexStorePath: indexStorePath,
-                  indexDatabasePath: indexDatabasePath,
                   rules: rules,
                   reporter: reporter,
-                  included: (yamlConfiguration?.included ?? [""]).map{ projectPath.appending(component: $0)},
-                  excluded: (yamlConfiguration?.excluded ?? []).map{ projectPath.appending(component: $0)} ,
+                  included: included,
+                  excluded: excluded ,
+                  excludedGroupName: yamlConfiguration?.excludedGroupName ?? [],
                   blacklistFiles: yamlConfiguration?.blacklistFiles ?? [],
                   blacklistSymbols: yamlConfiguration?.blacklistSymbols ?? [],
                   outputFile: outputFilePath)
     }
+}
+
+private func createOutputFilePath(projectPath: AbsolutePath, outputFile: String?) -> AbsolutePath {
+    if let outputFile = outputFile {
+        if let _ = try? RelativePath(validating: outputFile) {
+            let outputFilePath = AbsolutePath(outputFile, relativeTo: projectPath)
+            if let pathExtension = outputFilePath.extension {
+                if pathExtension == "json" && localFileSystem.exists(outputFilePath.parentDirectory) {
+                    return outputFilePath
+                }
+            }
+        } else if let absolutePath = try? AbsolutePath(validating: outputFile) {
+            if let pathExtension = absolutePath.extension {
+                if pathExtension == "json" && localFileSystem.exists(absolutePath.parentDirectory) {
+                    return absolutePath
+                }
+            }
+        }
+    }
+    return projectPath.appending(component: "pecker.result.json")
 }

@@ -24,7 +24,7 @@ extension SourceLocation: Equatable {
 
 extension SourceLocation {
     /// Converts a `SourceLocation` to a `SwiftSyntax.SourceLocation`.
-    public var toSSLocation: SSSourceLocation {
+    public var ssLocation: SSSourceLocation {
         return SSSourceLocation(
             line: line,
             column: column,
