@@ -101,7 +101,7 @@ output_file: pecker.result.json
 In terminal, you input:
 
 ```
-$ pecker /Users/ming/Desktop/Testttt -i /Users/ming/Library/Developer/Xcode/DerivedData/Testttt-aohluxvofrwtfagozexmpeifvryf/Index/DataStore
+$ pecker --path /Users/ming/Desktop/Testttt -i /Users/ming/Library/Developer/Xcode/DerivedData/Testttt-aohluxvofrwtfagozexmpeifvryf/Index/DataStore
 ```
   
 ### Command Line

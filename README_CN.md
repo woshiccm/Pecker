@@ -105,7 +105,7 @@ output_file: pecker.result.json
 终端输入
 
 ```
-pecker /Users/ming/Desktop/Testttt -i /Users/ming/Library/Developer/Xcode/DerivedData/Testttt-aohluxvofrwtfagozexmpeifvryf/Index/DataStore
+pecker --path /Users/ming/Desktop/Testttt -i /Users/ming/Library/Developer/Xcode/DerivedData/Testttt-aohluxvofrwtfagozexmpeifvryf/Index/DataStore
 ```
   
 ### 命令行
