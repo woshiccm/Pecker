@@ -269,7 +269,7 @@ extension UnusedExample {
 * xcode: 在Xcode中显示warning。
 * json: 生成名为`pecker.result.json`的文件，你可以通过`output_file`来自定义路径，这个路径可以为相对路劲和绝对路径，如果没有指定，默认为当前检测项目的文件下`pecker.result.json`。
 * 
-  ![](assets/json_result.png)
+  ![](assets/jsonresult.png)
 
 ```yaml
 reporter: "xcode"

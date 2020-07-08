@@ -94,9 +94,9 @@ private func createConfigurationPath(rootPath: AbsolutePath, config: String? = n
 
 private extension ProcessInfo {
     func environmentVariable(name: String) throws -> String {
-    guard let value = self.environment[name] else {
-        throw ProcessError.missingValue(argument: name)
-    }
+        guard let value = self.environment[name] else {
+            throw ProcessError.missingValue(argument: name)
+        }
     return value
   }
 }

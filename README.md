@@ -265,7 +265,7 @@ Reporter inclusion:
 * json: you can set path by `output_file`, and the path can be both  relative and absolute path, if unspecified, the default is `pecker.result.json` in current project directory.
 
    
-   ![](assets/json_result.png)
+   ![](assets/jsonresult.png)
 
 ```yaml
 reporter: "xcode"
