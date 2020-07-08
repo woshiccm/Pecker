@@ -54,6 +54,11 @@ extension Analyzer {
     /// Detect  whether source code if used
     /// - Parameter source: The source code to detect.
     private func analyze(source: SourceDetail) -> Bool {
+        // XMLRule analyze
+        if let xmlRule = self.xmlRule, xmlRule.analyze(source) {
+            return true
+        }
+        
         let symbols = sourceKitserver.findWorkspaceSymbols(matching: source.name)
 
         // If not find symbol of source, means source used.
@@ -82,9 +87,43 @@ extension Analyzer {
             return true
         }
         
-        // XMLRule analyze
-        if let xmlRule = self.xmlRule, xmlRule.analyze(source) {
-            return true
+        //Handle the follow case
+        /*
+         public protocol TestProtocol {
+             func test()
+         }
+
+         class TestObject: TestProtocol {}
+
+         extension TestObject {
+             func test() {}
+         }
+         */
+        if source.sourceKind == .function {
+            let symbolOverrideOfOccurrences = sourceKitserver.occurrences(
+                ofUSR: symbol.symbol.usr,
+                roles: [.overrideOf],
+                workspace: workSpace)
+            
+            if symbolOverrideOfOccurrences.contains(where: { $0.relations.lazy.filter{ $0.roles.contains(.overrideOf) }.count > 0}) {
+                return true
+            }
+            
+            let related = symbols.filter {
+                $0.symbol.name == symbol.symbol.name &&
+                    $0.symbol.usr != symbol.symbol.usr &&
+                    ($0.symbol.kind == .classMethod || $0.symbol.kind == .instanceMethod || $0.symbol.kind == .staticMethod)
+            }
+
+            for re in related {
+                let symbolOccurrenceResults = sourceKitserver.occurrences(
+                    ofUSR: re.symbol.usr,
+                    roles: [.overrideOf],
+                    workspace: workSpace)
+                if symbolOccurrenceResults.contains(where: { $0.relations.lazy.filter{ $0.roles.contains(.overrideOf)}.first(where: { $0.symbol.usr == symbol.symbol.usr }) != nil }) {
+                    return true
+                }
+            }
         }
                 
         return false
