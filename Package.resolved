@@ -5,8 +5,8 @@
         "package": "IndexStoreDB",
         "repositoryURL": "https://github.com/apple/indexstore-db.git",
         "state": {
-          "branch": "swift-5.2-branch",
-          "revision": "99472b2b84b1e72f0bf4b55f2ba0b921b16ed945",
+          "branch": "release/5.3",
+          "revision": "58b306e0274155911dd4957945fd7e630798fec5",
           "version": null
         }
       },
@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/apple/swift-syntax.git",
         "state": {
           "branch": null,
-          "revision": "0688b9cfc4c3dd234e4f55f1f056b2affc849873",
-          "version": "0.50200.0"
+          "revision": "844574d683f53d0737a9c6d706c3ef31ed2955eb",
+          "version": "0.50300.0"
         }
       },
       {
