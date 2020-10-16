@@ -35,16 +35,19 @@ class SourceCollector {
         let files = computeContents()
         let safeSources = ThreadSafe<[SourceDetail]>([])
         DispatchQueue.concurrentPerform(iterations: files.count) { index in
-            guard let syntax = try? SyntaxParser.parse(files[index].asURL) else {
-                return
-            }
-            let context = CollectContext(configuration: configuration,
+            let fileURL = files[index].asURL
+            do {
+                let syntax = try SyntaxParser.parse(fileURL)
+                let context = CollectContext(configuration: configuration,
                                          filePath: files[index].description,
                                          sourceFileSyntax: syntax)
-            let pipeline = SwiftSourceCollectVisitor(context: context)
-            pipeline.walk(syntax)
-            safeSources.atomically { $0 += pipeline.sources }
-            sourceExtensions.atomically { $0 += pipeline.sourceExtensions }
+                let pipeline = SwiftSourceCollectVisitor(context: context)
+                pipeline.walk(syntax)
+                safeSources.atomically { $0 += pipeline.sources }
+                sourceExtensions.atomically { $0 += pipeline.sourceExtensions }
+            } catch {
+                fputs("Error parsing \(fileURL) \(error)", stderr)
+            }
         }
         sources = safeSources.value
     }
