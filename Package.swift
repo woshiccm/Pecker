@@ -11,9 +11,9 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/apple/swift-syntax.git", .exact("0.50300.0")),
         .package(url: "https://github.com/apple/indexstore-db.git", .branch("release/5.3")),
-        .package(url: "https://github.com/apple/swift-tools-support-core.git", .branch("master")),
+        .package(url: "https://github.com/apple/swift-tools-support-core.git", .branch("main")),
         .package(url: "https://github.com/jpsim/Yams.git", from: "2.0.0"),
-        .package(url: "https://github.com/apple/swift-argument-parser.git", .branch("master")),
+        .package(url: "https://github.com/apple/swift-argument-parser.git", .branch("main")),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
