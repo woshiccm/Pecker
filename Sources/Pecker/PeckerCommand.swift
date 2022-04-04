@@ -18,23 +18,13 @@ struct CommandLineOptions: ParsableArguments {
     /// The configuration file path
     @Option(help: "The path of the configuration file")
     var config: String?
-    
-    @Flag(name: .shortAndLong, help: "Print the version and exit")
-    var version: Bool
-
-    mutating func validate() throws {
-        if version {
-            // TODO: Use a real version number here.
-            print("0.4.0")
-            throw ExitCode.success
-        }
-    }
 }
 
 struct PeckerCommand: ParsableCommand {
     static var configuration = CommandConfiguration(
       commandName: "Pecker",
-      abstract: "Detect unused Swift and Objective-C code"
+      abstract: "Detect unused Swift and Objective-C code",
+      version: "0.4.0"
     )
 
     @OptionGroup()

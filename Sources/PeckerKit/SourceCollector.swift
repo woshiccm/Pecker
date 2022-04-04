@@ -1,5 +1,6 @@
 import Foundation
 import SwiftSyntax
+import SwiftSyntaxParser
 import TSCBasic
 
 public typealias FileSystem = TSCBasic.FileSystem

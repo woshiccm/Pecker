@@ -1,4 +1,4 @@
-// swift-tools-version:5.1
+// swift-tools-version:5.6
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -6,36 +6,36 @@ import PackageDescription
 let package = Package(
     name: "pecker",
     products: [
-        .executable(name: "pecker", targets: ["Pecker"])
+        .executable(name: "pecker", targets: ["Pecker"]),
+        .library(name: "PeckerKit", targets: ["PeckerKit"])
     ],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-syntax.git", .exact("0.50300.0")),
-        .package(url: "https://github.com/apple/indexstore-db.git", .branch("release/5.3")),
-        .package(url: "https://github.com/apple/swift-tools-support-core.git", .branch("main")),
-        .package(url: "https://github.com/jpsim/Yams.git", from: "2.0.0"),
-        .package(url: "https://github.com/apple/swift-argument-parser.git", .exact("0.3.2")),
+        .package(url: "https://github.com/apple/swift-syntax.git", exact: "0.50600.1"),
+        .package(url: "https://github.com/apple/indexstore-db.git", branch: "swift-5.6-RELEASE"),
+        .package(url: "https://github.com/apple/swift-tools-support-core.git", from: "0.2.5"),
+        .package(url: "https://github.com/jpsim/Yams.git", from: "5.0.0"),
+        .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.1.1"),
     ],
     targets: [
-        // Targets are the basic building blocks of a package. A target can define a module or a test suite.
-        // Targets can depend on other targets in this package, and on products in packages which this package depends on.
-        .target(
+        .executableTarget(
             name: "Pecker",
             dependencies: [
-                "PeckerKit",
-                "SwiftToolsSupport-auto",
+                .byName(name: "PeckerKit"),
+                .product(name: "SwiftToolsSupport", package: "swift-tools-support-core"),
                 .product(name: "ArgumentParser", package: "swift-argument-parser")]
         ),
         .target(
             name: "PeckerKit",
             dependencies: [
-                "SwiftSyntax",
-                "IndexStoreDB",
-                "SwiftToolsSupport-auto",
-                "Yams"
+                .product(name: "SwiftSyntax", package: "swift-syntax"),
+                .product(name: "SwiftSyntaxParser", package: "swift-syntax"),
+                .product(name: "IndexStoreDB", package: "indexstore-db"),
+                .product(name: "SwiftToolsSupport", package: "swift-tools-support-core"),
+                .product(name: "Yams", package: "Yams")
             ]
         ),
         .testTarget(
             name: "PeckerTests",
-            dependencies: ["Pecker"]),
+            dependencies: [.byName(name: "Pecker")]),
     ]
 )
